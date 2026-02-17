@@ -1,0 +1,116 @@
+﻿[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +9ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDiscoveryModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mScheduleModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 18072  - [39m16/02/2026, 11:43:16 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mEventEmitterModule dependencies initialized[39m[38;5;3m +0ms[39m
+node : [31m[Nest] 
+18072  - 
+[39m16/02/2026, 
+11:43:16 pm [31m  
+ERROR[39m [38;5;3m[
+ExceptionHandler] 
+[39mTypeError: 
+sgMail.setApiKey is 
+not a function
+At line:1 char:1
++ node 
+dist/src/main.js > 
+crash_log.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
+~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([31m[N   
+ est] 180... not     
+a function:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+    at new 
+NotificationsService 
+[90m(C:\Users\TEJAS\
+.gemini\antigravity\s
+cratch\ihms-backend\
+[39mdist\src\modules\
+notifications\notific
+ations.service.js:71:
+20[90m)[39m
+    at Injector.insta
+ntiateClass [90m(C:\
+Users\TEJAS\.gemini\a
+ntigravity\scratch\ih
+ms-backend\[39mnode_
+modules\[4m@nestjs\c
+ore[24m\injector\inj
+ector.js:422:19[90m)
+[39m
+    at callback [90m
+(C:\Users\TEJAS\.gemi
+ni\antigravity\scratc
+h\ihms-backend\[39mn
+ode_modules\[4m@nest
+js\core[24m\injector
+\injector.js:70:45[9
+0m)[39m
+    at async Injector
+.resolveConstructorPa
+rams [90m(C:\Users\T
+EJAS\.gemini\antigrav
+ity\scratch\ihms-back
+end\[39mnode_modules
+\[4m@nestjs\core[24
+m\injector\injector.j
+s:170:24[90m)[39m
+    at async Injector
+.loadInstance [90m(C
+:\Users\TEJAS\.gemini
+\antigravity\scratch\
+ihms-backend\[39mnod
+e_modules\[4m@nestjs
+\core[24m\injector\i
+njector.js:75:13[90m
+)[39m
+    at async Injector
+.loadProvider [90m(C
+:\Users\TEJAS\.gemini
+\antigravity\scratch\
+ihms-backend\[39mnod
+e_modules\[4m@nestjs
+\core[24m\injector\i
+njector.js:103:9[90m
+)[39m
+    at async [90mC:\
+Users\TEJAS\.gemini\a
+ntigravity\scratch\ih
+ms-backend\[39mnode_
+modules\[4m@nestjs\c
+ore[24m\injector\ins
+tance-loader.js:56:13
+    at async 
+Promise.all (index 3)
+    at async Instance
+Loader.createInstance
+sOfProviders [90m(C:
+\Users\TEJAS\.gemini\
+antigravity\scratch\i
+hms-backend\[39mnode
+_modules\[4m@nestjs\
+core[24m\injector\in
+stance-loader.js:55:9
+[90m)[39m
+    at async [90mC:\
+Users\TEJAS\.gemini\a
+ntigravity\scratch\ih
+ms-backend\[39mnode_
+modules\[4m@nestjs\c
+ore[24m\injector\ins
+tance-loader.js:40:13

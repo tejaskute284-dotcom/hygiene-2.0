@@ -1,0 +1,39 @@
+
+> ihms@0.1.0 lint
+> eslint
+
+
+C:\Users\TEJAS\.gemini\antigravity\scratch\ihms\src\components\dashboard\JourneyTimeline.tsx
+  26:60  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+C:\Users\TEJAS\.gemini\antigravity\scratch\ihms\src\components\dashboard\MedicationSwiper.tsx
+  30:35  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:38  warning  'status' is defined but never used        @typescript-eslint/no-unused-vars
+
+C:\Users\TEJAS\.gemini\antigravity\scratch\ihms\src\components\layout\DashboardLayout.tsx
+  5:10  warning  'cn' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\TEJAS\.gemini\antigravity\scratch\ihms\src\components\layout\Header.tsx
+  4:10  warning  'GlassCard' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\TEJAS\.gemini\antigravity\scratch\ihms\src\components\providers\ThemeProvider.tsx
+  12:9  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+C:\Users\TEJAS\.gemini\antigravity\scratch\ihms\src\components\providers\ThemeProvider.tsx:12:9
+  10 |
+  11 |     useEffect(() => {
+> 12 |         setMounted(true);
+     |         ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  13 |
+  14 |         // Initial time check
+  15 |         const hour = new Date().getHours();  react-hooks/set-state-in-effect
+  41:8  warning  React Hook useEffect has missing dependencies: 'setTimeOfDay' and 'timeOfDay'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+
+??? 7 problems (3 errors, 4 warnings)
+
