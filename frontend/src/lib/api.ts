@@ -35,7 +35,7 @@ async function apiRequest<T>(
     if (!response.ok) {
         if (response.status === 401) {
             // Token expired or invalid
-            // import('@/lib/auth-actions').then(m => m.logout());
+            import('@/lib/auth-actions').then(m => m.logout());
             throw new Error('Unauthorized');
         }
         const error = await response.json().catch(() => ({ message: 'Request failed' }));
