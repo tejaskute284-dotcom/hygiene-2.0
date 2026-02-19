@@ -7,228 +7,220 @@
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
-  --color-surface: var(--surface);
+  --color-glass-border: var(--glass-border);
+  --color-glass-bg: var(--glass-bg);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-/* Wire Tailwind dark: variant to our [data-theme="dark"] attribute */
-@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
-/* ============================================================
-   ROOT — Medical Light Theme (Claymorphism)
-   Primary: Soft Green | Secondary: Sky Blue | Emergency: Red only
-   ============================================================ */
 :root {
-  --background: #eef7f2;
-  --surface: #ffffff;
-  --foreground: #1a3c2e;
-  --foreground-muted: #4a7060;
-  --primary: #22c55e;
-  --primary-light: #bbf7d0;
-  --primary-dark: #16a34a;
-  --secondary: #0ea5e9;
-  --secondary-light: #bae6fd;
-  --secondary-dark: #0284c7;
-  --accent: #a78bfa;
-  --accent-light: #ede9fe;
-  --muted: #d1f0e0;
-  --emergency: #ef4444;
-  --emergency-light: #fee2e2;
-  --warning: #f59e0b;
-  --warning-light: #fef3c7;
-  --success: #10b981;
-
-  /* Claymorphism tokens */
-  --clay-bg: #ffffff;
-  --clay-shadow-sm: 0 2px 8px rgba(34, 197, 94, 0.10), inset 0 1px 3px rgba(255, 255, 255, 0.90);
-  --clay-shadow-md: 0 6px 20px rgba(34, 197, 94, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 2px 4px rgba(255, 255, 255, 0.80);
-  --clay-shadow-lg: 0 12px 40px rgba(34, 197, 94, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08), inset 0 2px 6px rgba(255, 255, 255, 0.90);
-  --clay-shadow-active: 0 2px 6px rgba(34, 197, 94, 0.08), inset 0 2px 6px rgba(0, 0, 0, 0.08);
-  --clay-border: rgba(34, 197, 94, 0.15);
-  --clay-radius: 1.75rem;
-  --clay-radius-sm: 1rem;
-  --clay-radius-lg: 2.5rem;
+  /* Default / Day - Light Mode */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --primary: #3b82f6;
+  --secondary: #64748b;
+  --accent: #0ea5e9;
+  --muted: #f1f5f9;
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --simple-contrast-bg: #ffffff;
+  --simple-contrast-text: #000000;
 }
 
-/* ============================================================
-   DARK MODE — Medical Dark (Teal/Forest night)
-   ============================================================ */
+/* Dark Mode - Default */
 [data-theme="dark"] {
-  --background: #0d1f18;
-  --surface: #162a20;
-  --foreground: #e6f4ed;
-  --foreground-muted: #86b09a;
-  --primary: #4ade80;
-  --primary-light: #14532d;
-  --primary-dark: #86efac;
-  --secondary: #38bdf8;
-  --secondary-light: #0c4a6e;
-  --secondary-dark: #7dd3fc;
-  --accent: #c4b5fd;
-  --accent-light: #3b1e6e;
-  --muted: #1a3228;
-  --emergency: #f87171;
-  --emergency-light: #4c1414;
-  --warning: #fbbf24;
-  --warning-light: #451a03;
-  --success: #34d399;
-
-  /* Dark clay shadows — perceptible on deep backgrounds */
-  --clay-bg: #162a20;
-  --clay-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.04);
-  --clay-shadow-md: 0 6px 24px rgba(0, 0, 0, 0.50), 0 2px 10px rgba(0, 0, 0, 0.30), inset 0 1px 3px rgba(255, 255, 255, 0.05);
-  --clay-shadow-lg: 0 12px 44px rgba(0, 0, 0, 0.55), 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 3px rgba(255, 255, 255, 0.06);
-  --clay-shadow-active: 0 2px 6px rgba(0, 0, 0, 0.30), inset 0 2px 8px rgba(0, 0, 0, 0.40);
-  --clay-border: rgba(74, 222, 128, 0.12);
+  --background: #0f172a;
+  --foreground: #e2e8f0;
+  --primary: #60a5fa;
+  --secondary: #94a3b8;
+  --accent: #38bdf8;
+  --muted: #1e293b;
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(96, 165, 250, 0.3);
 }
 
-/* ============================================================
-   BODY
-   ============================================================ */
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  transition: background 0.6s ease, color 0.4s ease;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Morning - Light Mode */
+[data-time="morning"][data-theme="light"],
+[data-time="morning"]:not([data-theme="dark"]) {
+  --background: #fff7ed;
+  --foreground: #431407;
+  --primary: #f97316;
+  --secondary: #fb923c;
+  --accent: #38bdf8;
+  --muted: #ffedd5;
+  --glass-bg: rgba(255, 247, 237, 0.7);
+  --glass-border: rgba(251, 146, 60, 0.3);
 }
 
-/* ============================================================
-   CLAYMORPHISM CORE CLASSES
-   ============================================================ */
-.clay {
-  background: var(--clay-bg);
-  box-shadow: var(--clay-shadow-md);
-  border-radius: var(--clay-radius);
-  border: 1px solid var(--clay-border);
+/* Morning - Dark Mode */
+[data-time="morning"][data-theme="dark"] {
+  --background: #1c1917;
+  --foreground: #fef3c7;
+  --primary: #fb923c;
+  --secondary: #fdba74;
+  --accent: #7dd3fc;
+  --muted: #292524;
+  --glass-bg: rgba(28, 25, 23, 0.7);
+  --glass-border: rgba(251, 146, 60, 0.3);
 }
 
-.clay-sm {
-  background: var(--clay-bg);
-  box-shadow: var(--clay-shadow-sm);
-  border-radius: var(--clay-radius-sm);
-  border: 1px solid var(--clay-border);
+/* Evening - Light Mode */
+[data-time="evening"][data-theme="light"],
+[data-time="evening"]:not([data-theme="dark"]) {
+  --background: #faf5ff;
+  --foreground: #3b0764;
+  --primary: #a855f7;
+  --secondary: #c084fc;
+  --accent: #f472b6;
+  --muted: #f3e8ff;
+  --glass-bg: rgba(250, 245, 255, 0.7);
+  --glass-border: rgba(168, 85, 247, 0.3);
 }
 
-.clay-lg {
-  background: var(--clay-bg);
-  box-shadow: var(--clay-shadow-lg);
-  border-radius: var(--clay-radius-lg);
-  border: 1px solid var(--clay-border);
+/* Evening - Dark Mode */
+[data-time="evening"][data-theme="dark"] {
+  --background: #1e1b4b;
+  --foreground: #e9d5ff;
+  --primary: #c084fc;
+  --secondary: #d8b4fe;
+  --accent: #f9a8d4;
+  --muted: #312e81;
+  --glass-bg: rgba(30, 27, 75, 0.7);
+  --glass-border: rgba(192, 132, 252, 0.3);
 }
 
-/* Button press effect */
-.clay-btn {
-  box-shadow: var(--clay-shadow-md);
-  transition: box-shadow 0.15s ease, transform 0.15s ease;
+/* Night - Light Mode (rare but supported) */
+[data-time="night"][data-theme="light"] {
+  --background: #f1f5f9;
+  --foreground: #1e293b;
+  --primary: #6366f1;
+  --secondary: #64748b;
+  --accent: #818cf8;
+  --muted: #e2e8f0;
+  --glass-bg: rgba(241, 245, 249, 0.7);
+  --glass-border: rgba(99, 102, 241, 0.3);
 }
 
-.clay-btn:hover {
-  box-shadow: var(--clay-shadow-lg);
-  transform: translateY(-2px);
+/* Night - Dark Mode (default for night) */
+[data-time="night"][data-theme="dark"],
+[data-time="night"]:not([data-theme="light"]) {
+  --background: #020617;
+  --foreground: #e2e8f0;
+  --primary: #6366f1;
+  --secondary: #475569;
+  --accent: #818cf8;
+  --muted: #1e293b;
+  --glass-bg: rgba(2, 6, 23, 0.7);
+  --glass-border: rgba(99, 102, 241, 0.3);
 }
 
-.clay-btn:active {
-  box-shadow: var(--clay-shadow-active);
-  transform: translateY(1px);
+/* --- Accessibility Mode Overrides --- */
+
+/* SIMPLE MODE: High Contrast, Huge Elements, Voice-First emphasis */
+[data-mode="simple"] {
+  font-size: 125%;
+  /* 25% larger base font */
+  --background: #ffffff !important;
+  --foreground: #000000 !important;
+  --primary: #0000ff !important;
+  /* Pure Blue */
+  --secondary: #333333 !important;
+  --accent: #ff0000 !important;
+  /* Pure Red */
+  --muted: #eeeeee !important;
+  --glass-bg: #ffffff !important;
+  --glass-border: #000000 !important;
 }
 
-/* ============================================================
-   TEXT GRADIENT — Green to Sky Blue (medical)
-   ============================================================ */
-.text-gradient {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+[data-mode="simple"] .glass-card {
+  border-width: 3px !important;
+  background: #ffffff !important;
+  box-shadow: none !important;
 }
 
-/* ============================================================
-   SCROLLBAR
-   ============================================================ */
+/* POWER MODE: Dense, Precise, 3-column layouts */
+[data-mode="power"] {
+  font-size: 90%;
+  /* Smaller base font for density */
+  --background: #0f172a;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-light);
+  background: var(--color-glass-border);
   border-radius: 10px;
+  border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
 }
 
+/* Global Selection */
 ::selection {
-  background: var(--primary-light);
-  color: var(--primary-dark);
+  background: var(--primary);
+  color: white;
 }
 
-/* ============================================================
-   BACKGROUND SOFT BLOBS (replaces dark aurora)
-   ============================================================ */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background 0.5s ease, color 0.5s ease;
+  overflow-x: hidden;
+}
+
+/* Custom class for GlassCards to handle transitions better */
+.glass-transition {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .aurora-bg {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: -1;
   overflow: hidden;
+  filter: blur(100px);
   pointer-events: none;
+  opacity: 0.4;
 }
 
 .aurora-orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
-  animation: float 20s infinite alternate ease-in-out;
+  animation: float 20s infinite alternate;
 }
 
 @keyframes float {
   0% {
-    transform: translate(-5%, -5%) scale(1);
-  }
-
-  50% {
-    transform: translate(8%, 3%) scale(1.15);
+    transform: translate(0, 0) scale(1);
   }
 
   100% {
-    transform: translate(-3%, 10%) scale(1.05);
+    transform: translate(10vw, 10vh) scale(1.2);
   }
 }
 
-/* ============================================================
-   UTILITIES
-   ============================================================ */
-.glass-transition {
-  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-/* Soft scan line (very subtle for medical) */
-@keyframes scan {
-  from {
-    top: -100%;
+@keyframes float-delayed {
+  0% {
+    transform: translate(10vw, 10vh) scale(1.1);
   }
 
-  to {
-    top: 200%;
+  100% {
+    transform: translate(-5vw, -5vh) scale(1);
   }
-}
-
-.scan-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(to bottom, transparent, rgba(34, 197, 94, 0.04), transparent);
-  animation: scan 10s linear infinite;
-  pointer-events: none;
 }

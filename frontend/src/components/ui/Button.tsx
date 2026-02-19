@@ -1,96 +1,44 @@
-"use client";
-
-import { forwardRef } from "react";
+import { ButtonHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { useThemeStore } from "@/lib/store";
 
-interface ButtonProps extends HTMLMotionProps<"button"> {
-    variant?: "primary" | "secondary" | "ghost" | "danger" | "outline";
-    size?: "sm" | "md" | "lg" | "icon" | "icon-sm";
-    children?: React.ReactNode;
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: "primary" | "secondary" | "outline" | "ghost";
+    size?: "sm" | "md" | "lg" | "icon";
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-    ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
+    ({ className, variant = "primary", size = "md", ...props }, ref) => {
+        const { accessibilityMode } = useThemeStore();
 
-        const baseStyles = [
-            "inline-flex items-center justify-center gap-2",
-            "font-bold tracking-wide",
-            "transition-all duration-200 ease-out",
-            "focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--primary)]/30",
-            "disabled:opacity-50 disabled:pointer-events-none",
-            "select-none cursor-pointer",
-            "clay-btn",
-        ].join(" ");
+        // Map accessibility modes to sizes if needed, but primarily handle via CSS variables or classes
+        const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)] disabled:opacity-50 disabled:pointer-events-none data-[mode=simple]:p-6 data-[mode=simple]:text-lg";
 
         const variants = {
-            // Soft green — primary medical action (take med, confirm, save)
-            primary: [
-                "bg-[var(--primary)] text-white",
-                "border border-[var(--primary-dark)]/30",
-                "[box-shadow:0_6px_20px_rgba(34,197,94,0.25),_0_2px_6px_rgba(34,197,94,0.15),_inset_0_2px_4px_rgba(255,255,255,0.35)]",
-                "hover:[box-shadow:0_10px_28px_rgba(34,197,94,0.30),_0_4px_10px_rgba(34,197,94,0.20),_inset_0_2px_4px_rgba(255,255,255,0.35)]",
-                "active:[box-shadow:inset_0_3px_8px_rgba(0,0,0,0.15)] active:translate-y-[1px]",
-            ].join(" "),
-
-            // Sky blue — info/secondary actions (view, navigate, filter)
-            secondary: [
-                "bg-[var(--secondary)] text-white",
-                "border border-[var(--secondary-dark)]/30",
-                "[box-shadow:0_6px_20px_rgba(14,165,233,0.22),_0_2px_6px_rgba(14,165,233,0.12),_inset_0_2px_4px_rgba(255,255,255,0.35)]",
-                "hover:[box-shadow:0_10px_28px_rgba(14,165,233,0.28),_0_4px_10px_rgba(14,165,233,0.18),_inset_0_2px_4px_rgba(255,255,255,0.35)]",
-                "active:[box-shadow:inset_0_3px_8px_rgba(0,0,0,0.15)] active:translate-y-[1px]",
-            ].join(" "),
-
-            // Soft white clay — ghost/surface actions (cancel, close, back)
-            ghost: [
-                "bg-white text-[var(--foreground)]",
-                "border border-[var(--clay-border)]",
-                "[box-shadow:var(--clay-shadow-sm)]",
-                "hover:[box-shadow:var(--clay-shadow-md)] hover:bg-[var(--muted)]",
-                "active:[box-shadow:var(--clay-shadow-active)] active:translate-y-[1px]",
-            ].join(" "),
-
-            // Outlined variant
-            outline: [
-                "bg-transparent text-[var(--primary)]",
-                "border-2 border-[var(--primary)]",
-                "shadow-none",
-                "hover:bg-[var(--primary-light)] hover:shadow-md",
-                "active:scale-[0.98]",
-            ].join(" "),
-
-            // Red ONLY for genuine emergencies (delete, critical alert, abort)
-            danger: [
-                "bg-[var(--emergency)] text-white",
-                "border border-red-600/30",
-                "[box-shadow:0_6px_20px_rgba(239,68,68,0.22),_0_2px_6px_rgba(239,68,68,0.12),_inset_0_2px_4px_rgba(255,255,255,0.30)]",
-                "hover:[box-shadow:0_10px_28px_rgba(239,68,68,0.30),_0_4px_10px_rgba(239,68,68,0.18),_inset_0_2px_4px_rgba(255,255,255,0.30)]",
-                "active:[box-shadow:inset_0_3px_8px_rgba(0,0,0,0.15)] active:translate-y-[1px]",
-            ].join(" "),
+            primary: "bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] text-white hover:brightness-110 shadow-lg shadow-[var(--primary)]/20 active:scale-95 transition-all duration-300",
+            secondary: "bg-[var(--secondary)] text-white hover:opacity-90 active:scale-95 transition-all",
+            outline: "border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white active:scale-95 transition-all",
+            ghost: "hover:bg-[var(--muted)] text-[var(--foreground)] active:opacity-70 transition-all",
         };
 
         const sizes = {
-            sm: "h-9 px-5 text-xs rounded-2xl",
-            md: "h-11 px-7 text-sm rounded-[1.25rem]",
-            lg: "h-14 px-10 text-base rounded-[1.5rem]",
-            icon: "h-11 w-11 rounded-2xl",
-            "icon-sm": "h-9 w-9 rounded-xl",
+            sm: "h-8 px-3 text-sm",
+            md: "h-10 px-4 py-2",
+            lg: "h-12 px-6 text-lg",
+            icon: "h-10 w-10",
         };
 
         return (
-            <motion.button
+            <button
                 ref={ref}
-                whileHover={{ scale: 1.02, y: -2 }}
-                whileTap={{ scale: 0.97, y: 1 }}
+                data-mode={accessibilityMode}
                 className={cn(baseStyles, variants[variant], sizes[size], className)}
                 {...props}
-            >
-                {children}
-            </motion.button>
+            />
         );
     }
 );
 
 Button.displayName = "Button";
+
 export { Button };

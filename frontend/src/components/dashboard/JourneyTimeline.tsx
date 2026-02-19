@@ -1,7 +1,5 @@
-"use client";
-
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Check, Pill, Clock, Stethoscope, Plus, X, Trash2, Zap, ArrowRight, Calendar } from "lucide-react";
+import { Check, Circle, Clock, Stethoscope, Plus, X, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -123,175 +121,119 @@ export function JourneyTimeline({ medications = [], appointments = [], dailySche
 
     return (
         <>
-            <GlassCard className="h-full min-h-[500px] !p-0 overflow-visible">
-                <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/5 backdrop-blur-3xl rounded-t-[2.5rem]">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <Zap size={14} className="text-[#00E5FF]" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#00E5FF]">Neural Flow</span>
-                        </div>
-                        <h3 className="text-2xl font-black uppercase tracking-tighter text-[var(--foreground)]">Daily Journey</h3>
+            <GlassCard className="h-full min-h-[400px] relative group/journey">
+                <div className="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 className="text-xl font-black uppercase tracking-tight">Today&apos;s Journey</h3>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)]">Chronological Health Log</p>
                     </div>
-                    <Button
-                        variant="primary"
-                        size="sm"
+                    <button
                         onClick={() => setIsAdding(true)}
-                        className="gap-2 shadow-[0_0_20px_rgba(0,229,255,0.2)]"
+                        className="w-8 h-8 rounded-full bg-[var(--primary)] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-[var(--primary)]/30"
                     >
                         <Plus size={16} strokeWidth={3} />
-                        Add Protocol
-                    </Button>
+                    </button>
                 </div>
 
-                <div className="p-8 relative">
-                    {/* Progress Line */}
-                    <div className="absolute left-[3.25rem] top-8 bottom-8 w-[2px] bg-gradient-to-b from-[#00E5FF]/40 via-[#00E5FF]/10 to-transparent pointer-events-none" />
+                <div className="relative pl-6 space-y-10 before:absolute before:inset-0 before:left-[23px] before:w-[2px] before:bg-gradient-to-b before:from-[var(--primary)]/20 before:to-transparent before:h-[calc(100%-40px)]">
+                    {journey.map((step, index) => (
+                        <motion.div
+                            key={step.id}
+                            className="relative flex items-start gap-6 group/item"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                        >
+                            {/* Icon/Dot */}
+                            <div className={`
+                                z-10 w-6 h-6 rounded-full flex items-center justify-center border-2 transition-all duration-500
+                                ${step.status === 'completed'
+                                    ? 'bg-[var(--primary)] border-[var(--primary)] text-white scale-110 shadow-lg shadow-[var(--primary)]/30'
+                                    : step.status === 'current'
+                                        ? 'bg-white border-[var(--primary)] text-[var(--primary)] animate-pulse ring-4 ring-[var(--primary)]/20'
+                                        : 'bg-[var(--background)] border-[var(--color-glass-border)] text-[var(--secondary)]'
+                                }
+                            `}>
+                                {step.status === 'completed' ? <Check size={12} strokeWidth={4} /> :
+                                    step.status === 'current' ? <Clock size={12} strokeWidth={3} /> :
+                                        step.type === 'med' ? <Circle size={10} strokeWidth={3} /> :
+                                            step.type === 'apt' ? <Stethoscope size={10} /> : <div className="w-1.5 h-1.5 rounded-full bg-current" />}
+                            </div>
 
-                    <div className="space-y-8 relative">
-                        {journey.map((step, index) => (
-                            <motion.div
-                                key={step.id}
-                                className="group/item flex items-start gap-8"
-                                initial={{ opacity: 0, x: -30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: index * 0.1, duration: 0.6, ease: [0.2, 0.8, 0.2, 1] }}
-                            >
-                                {/* Indicator Plate */}
-                                <div className="relative flex flex-col items-center">
-                                    <motion.div
-                                        whileHover={{ scale: 1.15 }}
-                                        className={`
-                                            z-10 w-14 h-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-700
-                                            ${step.status === 'completed'
-                                                ? 'bg-white/5 border-white/5 text-[var(--secondary)] backdrop-blur-md'
-                                                : step.status === 'current'
-                                                    ? 'bg-[var(--primary)] border-[var(--primary)] text-black shadow-[0_0_30px_#00E5FF] scale-110'
-                                                    : 'bg-white/5 border-white/10 text-[var(--secondary)] group-hover/item:border-[#00E5FF]/50 backdrop-blur-md'
-                                            }
-                                        `}>
-                                        {step.status === 'completed' ? <Check size={20} strokeWidth={3} /> :
-                                            step.status === 'current' ? <Zap size={20} className="animate-pulse" /> :
-                                                step.type === 'med' ? <Pill size={18} /> :
-                                                    step.type === 'apt' ? <Stethoscope size={18} /> : <div className="w-1.5 h-1.5 rounded-full bg-current" />}
-                                    </motion.div>
-
-                                    {step.status === 'current' && (
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-[#00E5FF]/10 rounded-full blur-xl animate-pulse -z-10" />
-                                    )}
-                                </div>
-
-                                {/* Content Plate */}
-                                <div className="flex-1 pt-1 space-y-2">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <span className={`text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full ${step.status === 'completed' ? 'bg-white/5 text-[var(--secondary)]' :
-                                                step.status === 'current' ? 'bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/30' : 'bg-white/5 text-[var(--foreground)] border border-white/5'
-                                                }`}>
-                                                {step.time}
-                                            </span>
-                                            {step.type === 'apt' && (
-                                                <div className="flex items-center gap-1.5 text-[9px] font-black uppercase text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
-                                                    <Stethoscope size={10} /> Clinical
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        {step.type === 'task' && onDeleteTask && (
-                                            <button
-                                                onClick={() => onDeleteTask(step.rawId!)}
-                                                className="opacity-0 group-hover/item:opacity-100 p-2 hover:bg-neutral-100 rounded-xl transition-all text-neutral-400 hover:text-red-500"
-                                            >
-                                                <Trash2 size={14} />
-                                            </button>
+                            {/* Content */}
+                            <div className={`flex-1 transition-opacity ${step.status === 'upcoming' ? 'opacity-40 group-hover/item:opacity-100' : ''}`}>
+                                <div className="flex justify-between items-center mb-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-[var(--primary)]">{step.time}</span>
+                                        {step.type === 'apt' && (
+                                            <span className="text-[8px] font-black bg-blue-500/10 text-blue-500 px-2 py-0.5 rounded-full uppercase">Consult</span>
+                                        )}
+                                        {step.type === 'task' && (
+                                            <span className="text-[8px] font-black bg-purple-500/10 text-purple-500 px-2 py-0.5 rounded-full uppercase">Task</span>
                                         )}
                                     </div>
-
-                                    <h4 className={`text-base font-black tracking-tight leading-none uppercase ${step.status === 'completed' ? 'text-[var(--secondary)] line-through' : 'text-[var(--foreground)]'
-                                        }`}>
-                                        {step.label}
-                                    </h4>
-
-                                    {step.status === 'current' && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 5 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="flex items-center gap-2 text-[10px] font-bold text-[var(--primary)] uppercase tracking-widest"
+                                    {step.type === 'task' && onDeleteTask && (
+                                        <button
+                                            onClick={() => onDeleteTask(step.rawId!)}
+                                            className="opacity-0 group-hover/item:opacity-100 p-1 hover:text-red-500 transition-all"
                                         >
-                                            In Progress <ArrowRight size={10} />
-                                        </motion.div>
+                                            <Trash2 size={12} />
+                                        </button>
                                     )}
                                 </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Footer Insight */}
-                <div className="p-6 bg-white/5 rounded-b-[2.5rem] border-t border-white/5 backdrop-blur-3xl">
-                    <div className="flex items-center gap-4 text-neutral-500">
-                        <Calendar size={18} className="text-[#00E5FF]/40" />
-                        <p className="text-[10px] font-black uppercase tracking-widest">Schedule synchronized via Cloud Registry</p>
-                    </div>
+                                <p className={`text-sm font-black tracking-tight ${step.status === 'completed' ? 'text-[var(--secondary)] line-through' : 'text-[var(--foreground)]'}`}>
+                                    {step.label}
+                                </p>
+                            </div>
+                        </motion.div>
+                    ))}
                 </div>
             </GlassCard>
 
             <AnimatePresence>
                 {isAdding && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsAdding(false)}
-                            className="absolute inset-0 bg-black/40 backdrop-blur-2xl"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9, y: 40 }}
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.9, y: 40 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                            className="w-full max-w-xl bg-[var(--background)] border border-white/10 rounded-[3rem] p-12 shadow-[0_40px_100px_rgba(0,0,0,0.5)] relative z-10 backdrop-blur-3xl"
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="w-full max-w-md bg-[var(--background)] border border-[var(--color-glass-border)] rounded-[40px] p-8 shadow-2xl overflow-hidden relative"
                         >
-                            <div className="absolute top-0 right-0 p-8">
-                                <button onClick={() => setIsAdding(false)} className="w-12 h-12 rounded-full hover:bg-white/5 flex items-center justify-center transition-colors text-[var(--foreground)]">
+                            <div className="absolute top-0 right-0 p-6">
+                                <button onClick={() => setIsAdding(false)} className="text-[var(--secondary)] hover:text-white transition-colors">
                                     <X size={24} />
                                 </button>
                             </div>
 
-                            <div className="space-y-2 mb-10">
-                                <div className="flex items-center gap-2 text-[#00E5FF]">
-                                    <Calendar size={16} />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em]">Protocol Entry</span>
-                                </div>
-                                <h2 className="text-4xl font-black uppercase tracking-tighter text-[var(--foreground)]">Add Journey Step</h2>
-                            </div>
+                            <h2 className="text-3xl font-black mb-8 uppercase tracking-tighter">New Daily Event</h2>
 
-                            <form onSubmit={handleSubmit} className="space-y-8">
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 ml-2">Objective Description</label>
+                            <form onSubmit={handleSubmit} className="space-y-6">
+                                <div>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)] mb-2 block">Event Title</label>
                                     <input
                                         required
-                                        autoFocus
                                         type="text"
-                                        placeholder="E.g. NEURAL SYRIUM INJECTION"
+                                        placeholder="E.g. Morning Walk, Water Break"
                                         value={newTask.title}
                                         onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                                        className="w-full bg-white/5 border-2 border-transparent focus:border-[#00E5FF]/50 rounded-[1.5rem] px-8 py-6 outline-none transition-all font-black uppercase tracking-tight text-xl text-[var(--foreground)] placeholder:text-neutral-500/30"
+                                        className="w-full bg-[var(--muted)]/50 border border-[var(--color-glass-border)] rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all font-bold"
                                     />
                                 </div>
 
-                                <div className="space-y-3">
-                                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 ml-2">Temporal Marker</label>
+                                <div>
+                                    <label className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)] mb-2 block">Time</label>
                                     <input
                                         required
                                         type="time"
                                         value={newTask.time}
                                         onChange={(e) => setNewTask({ ...newTask, time: e.target.value })}
-                                        className="w-full bg-white/5 border-2 border-transparent focus:border-[#00E5FF]/50 rounded-[1.5rem] px-8 py-6 outline-none transition-all font-black text-xl text-[var(--foreground)]"
+                                        className="w-full bg-[var(--muted)]/50 border border-[var(--color-glass-border)] rounded-2xl px-6 py-4 focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all font-bold"
                                     />
                                 </div>
 
-                                <Button type="submit" className="w-full py-8 text-sm tracking-[0.2em]">Commit to Timeline</Button>
+                                <Button type="submit" className="w-full py-6 rounded-2xl shadow-xl shadow-[var(--primary)]/20 font-black uppercase tracking-widest mt-4">
+                                    Add to Journey
+                                </Button>
                             </form>
                         </motion.div>
                     </div>
