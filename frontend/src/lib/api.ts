@@ -23,6 +23,9 @@ async function apiRequest<T>(
             headers['Authorization'] = `Bearer ${token}`;
         } else {
             console.warn(`Request to ${endpoint} requires authentication but no token was found.`);
+            if (typeof window !== 'undefined') {
+                import('@/lib/auth-actions').then(m => m.logout());
+            }
             throw new Error('Unauthorized');
         }
     }
@@ -35,7 +38,7 @@ async function apiRequest<T>(
     if (!response.ok) {
         if (response.status === 401) {
             // Token expired or invalid
-            // import('@/lib/auth-actions').then(m => m.logout());
+            import('@/lib/auth-actions').then(m => m.logout());
             throw new Error('Unauthorized');
         }
         const error = await response.json().catch(() => ({ message: 'Request failed' }));

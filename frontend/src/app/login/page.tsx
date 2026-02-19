@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Lock, Mail, ArrowRight, Fingerprint, AlertCircle, Loader2 } from "lucide-react";
+import { Shield, Lock, Mail, ArrowRight, Fingerprint, AlertCircle, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { login, verify2FA, setSession } from "@/lib/auth-actions";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -61,60 +62,70 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[var(--background)] relative overflow-hidden">
-            {/* Dynamic Background Elements */}
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--primary)] opacity-10 blur-[100px] rounded-full" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500 opacity-10 blur-[100px] rounded-full" />
+        <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden font-sans">
+            {/* aurora background effects */}
+            <div className="aurora-bg" />
+            <div className="aurora-orb w-[600px] h-[600px] bg-primary/20 top-[-200px] left-[-100px]" />
+            <div className="aurora-orb w-[500px] h-[500px] bg-secondary/20 bottom-[-100px] right-[-100px] animation-delay-2000" />
 
             <motion.div
-                initial={false}
-                animate={{ opacity: 1, y: 0 }}
-                className="w-full max-w-md px-6 relative z-10"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="w-full max-w-lg px-6 relative z-10"
             >
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center p-4 bg-[var(--muted)] rounded-3xl mb-4 text-[var(--primary)] shadow-2xl shadow-[var(--primary)]/10">
-                        <Shield size={40} />
-                    </div>
-                    <h1 className="text-3xl font-black tracking-tight">Synapse Care OS</h1>
-                    <p className="text-[var(--secondary)] mt-2 font-medium">Secure Identity & Health Intelligence</p>
+                <div className="text-center mb-12">
+                    <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.2 }}
+                        className="inline-flex items-center justify-center p-6 bg-white rounded-[2rem] mb-6 text-primary shadow-clay border-2 border-white/50"
+                    >
+                        <Shield className="w-12 h-12" />
+                    </motion.div>
+                    <h1 className="text-section mb-2">Synapse Care OS</h1>
+                    <p className="text-subhead font-medium">Secure Identity & Health Intelligence</p>
                 </div>
 
-                <GlassCard className="p-8 border-[var(--color-glass-border)] ring-1 ring-white/10">
+                <GlassCard variant="clay" className="!p-10 shadow-2xl relative overflow-visible">
+                    <div className="absolute -top-12 -left-12 w-24 h-24 bg-sky-100/50 rounded-full blur-2xl" />
+                    <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-emerald-100/50 rounded-full blur-2xl" />
                     <AnimatePresence mode="wait">
                         {stage === "login" ? (
                             <motion.form
                                 key="login-stage"
-                                initial={false}
+                                initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 20 }}
+                                transition={{ duration: 0.5, ease: "anticipate" }}
                                 onSubmit={handleLogin}
-                                className="space-y-6"
+                                className="space-y-8"
                             >
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-widest text-[var(--secondary)]">Email Address</label>
-                                    <div className="relative">
-                                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--secondary)]" size={18} />
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black ml-2 text-slate-400 uppercase tracking-[0.2em]">EMAIL ADDRESS</label>
+                                    <div className="relative group">
+                                        <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" size={20} />
                                         <input
                                             type="email"
                                             required
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="w-full bg-[var(--muted)] border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-[var(--primary)] transition-all font-medium outline-none"
+                                            className="w-full bg-sky-50/50 border-none rounded-2xl py-5 pl-16 pr-6 font-black outline-none focus:ring-4 focus:ring-primary/10 text-lg transition-all shadow-clay placeholder:text-slate-200"
                                             placeholder="tejas@synapse.care"
                                         />
                                     </div>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="text-xs font-black uppercase tracking-widest text-[var(--secondary)]">Secure Password</label>
-                                    <div className="relative">
-                                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--secondary)]" size={18} />
+                                <div className="space-y-3">
+                                    <label className="text-[10px] font-black ml-2 text-slate-400 uppercase tracking-[0.2em]">SECURE PASSWORD</label>
+                                    <div className="relative group">
+                                        <Lock className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-primary transition-colors" size={20} />
                                         <input
                                             type="password"
                                             required
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
-                                            className="w-full bg-[var(--muted)] border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-[var(--primary)] transition-all font-medium outline-none"
+                                            className="w-full bg-sky-50/50 border-none rounded-2xl py-5 pl-16 pr-6 font-black outline-none focus:ring-4 focus:ring-primary/10 text-lg transition-all shadow-clay placeholder:text-slate-200"
                                             placeholder="••••••••"
                                         />
                                     </div>
@@ -122,11 +133,11 @@ export default function LoginPage() {
 
                                 {error && (
                                     <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 text-sm font-bold"
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="flex items-center gap-3 p-5 bg-amber-50 text-amber-600 rounded-2xl border border-white shadow-clay text-sm font-black uppercase tracking-tight"
                                     >
-                                        <AlertCircle size={16} />
+                                        <AlertCircle size={20} />
                                         {error}
                                     </motion.div>
                                 )}
@@ -134,10 +145,17 @@ export default function LoginPage() {
                                 <Button
                                     type="submit"
                                     disabled={loading}
-                                    className="w-full py-6 rounded-2xl text-lg font-black tracking-wide shadow-xl shadow-[var(--primary)]/20 active:scale-95 transition-transform"
+                                    variant="primary"
+                                    className="w-full py-7 rounded-2xl text-lg shadow-primary/20 font-black uppercase tracking-widest"
                                 >
-                                    {loading ? <Loader2 className="animate-spin" /> : <>Sign In <ArrowRight className="ml-2" size={20} /></>}
+                                    {loading ? <Loader2 className="animate-spin" /> : <>Sign In <ArrowRight className="ml-2 w-5 h-5" /></>}
                                 </Button>
+
+                                <div className="text-center">
+                                    <Link href="/register" className="text-xs font-bold tracking-widest text-slate-500 hover:text-primary transition-colors uppercase">
+                                        New to IHMS? Create high-fidelity account
+                                    </Link>
+                                </div>
                             </motion.form>
                         ) : (
                             <motion.form
@@ -145,63 +163,78 @@ export default function LoginPage() {
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: -20 }}
+                                transition={{ duration: 0.5, ease: "anticipate" }}
                                 onSubmit={handleVerify2FA}
-                                className="space-y-6"
+                                className="space-y-10"
                             >
-                                <div className="text-center space-y-2 mb-4">
-                                    <div className="inline-flex p-3 bg-blue-500/10 text-blue-500 rounded-2xl mb-2">
-                                        <Fingerprint size={32} />
+                                <div className="text-center space-y-3 mb-4">
+                                    <div className="inline-flex p-6 bg-white text-emerald-500 rounded-[2rem] mb-4 shadow-clay border-2 border-white/50">
+                                        <Fingerprint className="w-10 h-10" />
                                     </div>
-                                    <h3 className="text-xl font-black">Two-Step Verification</h3>
-                                    <p className="text-sm text-[var(--secondary)] font-medium"> Enter the 6-digit code from your authenticator app.</p>
+                                    <h3 className="text-headline">Two-Step Verification</h3>
+                                    <p className="text-subhead text-sm font-medium">Enter the 6-digit code from your authenticator app.</p>
                                 </div>
 
-                                <input
-                                    type="text"
-                                    required
-                                    autoFocus
-                                    maxLength={6}
-                                    value={twoFacCode}
-                                    onChange={(e) => setTwoFacCode(e.target.value.replace(/\D/g, ""))}
-                                    className="w-full bg-[var(--muted)] border-none rounded-3xl py-6 text-center text-4xl font-black tracking-[0.5em] focus:ring-2 focus:ring-blue-500 transition-all outline-none"
-                                    placeholder="000000"
-                                />
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        required
+                                        autoFocus
+                                        maxLength={6}
+                                        value={twoFacCode}
+                                        onChange={(e) => setTwoFacCode(e.target.value.replace(/\D/g, ""))}
+                                        className="w-full bg-sky-50/50 border-none rounded-[2rem] py-8 text-center text-5xl font-black tracking-[0.4em] outline-none focus:ring-4 focus:ring-emerald-400/10 transition-all font-mono shadow-clay text-emerald-600 placeholder:text-slate-100"
+                                        placeholder="000000"
+                                    />
+                                    {twoFacCode.length === 6 && (
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            className="absolute right-8 top-1/2 -translate-y-1/2 text-emerald-500"
+                                        >
+                                            <CheckCircle2 className="w-10 h-10" />
+                                        </motion.div>
+                                    )}
+                                </div>
 
                                 {error && (
                                     <motion.div
-                                        initial={{ opacity: 0, height: 0 }}
-                                        animate={{ opacity: 1, height: 'auto' }}
-                                        className="flex items-center gap-2 p-3 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 text-sm font-bold"
+                                        initial={{ opacity: 0, y: -10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="flex items-center gap-3 p-5 bg-amber-50 text-amber-600 rounded-2xl border border-white shadow-clay text-sm font-black uppercase tracking-tight"
                                     >
-                                        <AlertCircle size={16} />
+                                        <AlertCircle size={20} />
                                         {error}
                                     </motion.div>
                                 )}
 
-                                <Button
-                                    type="submit"
-                                    disabled={loading || twoFacCode.length !== 6}
-                                    className="w-full py-6 rounded-2xl text-lg font-black tracking-wide bg-blue-600 hover:bg-blue-700 shadow-xl shadow-blue-500/20"
-                                >
-                                    {loading ? <Loader2 className="animate-spin" /> : "Verify Identity"}
-                                </Button>
+                                <div className="space-y-4">
+                                    <Button
+                                        type="submit"
+                                        disabled={loading || twoFacCode.length !== 6}
+                                        variant="secondary"
+                                        className="w-full py-7 rounded-2xl text-lg shadow-emerald-400/20 font-black uppercase tracking-widest bg-emerald-400 hover:bg-emerald-500"
+                                    >
+                                        {loading ? <Loader2 className="animate-spin" /> : "Verify Identity"}
+                                    </Button>
 
-                                <button
-                                    type="button"
-                                    onClick={() => setStage("login")}
-                                    className="w-full text-xs font-black uppercase tracking-widest text-[var(--secondary)] hover:text-[var(--foreground)] transition-colors"
-                                >
-                                    Back to Sign In
-                                </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setStage("login")}
+                                        className="w-full text-xs font-bold tracking-widest text-slate-500 hover:text-foreground transition-colors uppercase py-2"
+                                    >
+                                        Back to Sign In
+                                    </button>
+                                </div>
                             </motion.form>
                         )}
                     </AnimatePresence>
                 </GlassCard>
 
-                <p className="text-center mt-8 text-xs text-[var(--secondary)] font-medium">
-                    Protected by AES-256 Multi-Layer Encryption & HIPAA Compliant Tunneling.
+                <p className="text-center mt-12 text-[10px] text-slate-500 dark:text-slate-500 font-bold uppercase tracking-[0.2em] opacity-60">
+                    Protected by AES-256 Multi-Layer Encryption & HIPAA Compliant Tunneling
                 </p>
             </motion.div>
-        </div>
+        </div >
     );
 }

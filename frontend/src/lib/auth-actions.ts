@@ -37,6 +37,27 @@ export const login = async (email: string, password: string): Promise<LoginRespo
     return response.json();
 };
 
+export const register = async (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+}): Promise<AuthResponse> => {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+    }
+
+    return response.json();
+};
+
 export const verify2FA = async (userId: string, code: string): Promise<AuthResponse> => {
     const response = await fetch(`${API_BASE_URL}/auth/2fa/authenticate`, {
         method: 'POST',

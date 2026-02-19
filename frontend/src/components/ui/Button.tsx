@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { useThemeStore } from "@/lib/store";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: "primary" | "secondary" | "outline" | "ghost";
+    variant?: "primary" | "secondary" | "outline" | "ghost" | "clay";
     size?: "sm" | "md" | "lg" | "icon";
 }
 
@@ -11,21 +11,21 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ({ className, variant = "primary", size = "md", ...props }, ref) => {
         const { accessibilityMode } = useThemeStore();
 
-        // Map accessibility modes to sizes if needed, but primarily handle via CSS variables or classes
-        const baseStyles = "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)] disabled:opacity-50 disabled:pointer-events-none data-[mode=simple]:p-6 data-[mode=simple]:text-lg";
+        const baseStyles = "inline-flex items-center justify-center font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none active:scale-95 cursor-pointer";
 
         const variants = {
-            primary: "bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] text-white hover:brightness-110 shadow-lg shadow-[var(--primary)]/20 active:scale-95 transition-all duration-300",
-            secondary: "bg-[var(--secondary)] text-white hover:opacity-90 active:scale-95 transition-all",
-            outline: "border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white active:scale-95 transition-all",
-            ghost: "hover:bg-[var(--muted)] text-[var(--foreground)] active:opacity-70 transition-all",
+            primary: "bg-primary text-white clay-button",
+            secondary: "bg-secondary text-white clay-button",
+            outline: "border-2 border-primary text-primary rounded-[var(--radius-2xl)] hover:bg-primary/5 transition-all focus:ring-primary",
+            ghost: "hover:bg-muted text-foreground rounded-[var(--radius-2xl)]",
+            clay: "bg-white text-primary shadow-clay border-2 border-white/50 hover:shadow-inner hover:translate-y-0.5 transition-all",
         };
 
         const sizes = {
-            sm: "h-8 px-3 text-sm",
-            md: "h-10 px-4 py-2",
-            lg: "h-12 px-6 text-lg",
-            icon: "h-10 w-10",
+            sm: "h-9 px-4 text-xs font-bold uppercase tracking-wider rounded-[var(--radius-xl)]",
+            md: "h-12 px-8 text-sm font-black uppercase tracking-widest rounded-[var(--radius-2xl)]",
+            lg: "h-16 px-10 text-base font-black uppercase tracking-widest rounded-[var(--radius-2xl)]",
+            icon: "h-12 w-12 rounded-2xl",
         };
 
         return (

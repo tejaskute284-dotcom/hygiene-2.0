@@ -2,8 +2,8 @@
 
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { GlassCard } from "@/components/ui/GlassCard";
-import { Calendar, Clock, MapPin, Loader2, Plus, Trash2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Calendar, Clock, MapPin, Loader2, Plus, Trash2, X, ChevronRight, Stethoscope, Video, User, CheckCircle2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { appointmentsApi } from "@/lib/api";
 import { Button } from "@/components/ui/Button";
@@ -16,7 +16,7 @@ export default function AppointmentsPage() {
     // Form state
     const [formData, setFormData] = useState({
         providerName: '',
-        type: 'Checkup',
+        type: 'General Checkup',
         date: '',
         time: '',
         notes: ''
@@ -45,9 +45,9 @@ export default function AppointmentsPage() {
             type: formData.type,
             provider: {
                 name: formData.providerName,
-                specialty: "General",
+                specialty: "General Medicine",
                 phone: "555-0000",
-                address: { street: "Clinic Address", city: "City", state: "ST", zip: "00000" }
+                address: { street: "123 Medical Plaza", city: "Healthy Springs", state: "CA", zip: "90210" }
             },
             scheduledAt,
             duration: 30,
@@ -58,7 +58,7 @@ export default function AppointmentsPage() {
             const saved = await appointmentsApi.create(newApt);
             setAppointments([...appointments, saved]);
             setIsAdding(false);
-            setFormData({ providerName: '', type: 'Checkup', date: '', time: '', notes: '' });
+            setFormData({ providerName: '', type: 'General Checkup', date: '', time: '', notes: '' });
         } catch (error) {
             console.error("Failed to add appointment:", error);
             alert("Backend failed to add appointment: " + (error as Error).message);
@@ -66,7 +66,7 @@ export default function AppointmentsPage() {
     };
 
     const handleDeleteAppointment = async (id: string) => {
-        if (!confirm("Are you sure you want to delete this appointment?")) return;
+        if (!confirm("Are you sure you want to cancel this appointment?")) return;
         try {
             await appointmentsApi.delete(id);
             setAppointments(appointments.filter(a => a.id !== id));
@@ -79,8 +79,8 @@ export default function AppointmentsPage() {
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="flex items-center justify-center h-screen -mt-24">
-                    <Loader2 className="w-12 h-12 animate-spin text-[var(--primary)]" />
+                <div className="flex items-center justify-center h-[60vh]">
+                    <Loader2 className="w-12 h-12 animate-spin text-primary" />
                 </div>
             </DashboardLayout>
         );
@@ -88,134 +88,211 @@ export default function AppointmentsPage() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-6xl mx-auto space-y-8 pb-20">
-                <div className="flex justify-between items-center">
+            <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                     <div>
-                        <h1 className="text-4xl font-black tracking-tight mb-2">Appointments</h1>
-                        <p className="text-[var(--secondary)] font-medium">Manage your clinical visits and consultations.</p>
+                        <h1 className="text-section mb-3">Clinical Schedule</h1>
+                        <p className="text-subhead max-w-lg">
+                            Track your upcoming consultations and manage your clinical wellness journey.
+                        </p>
                     </div>
-                    <Button onClick={() => setIsAdding(true)} className="flex items-center gap-2 py-6 px-8 rounded-2xl shadow-xl shadow-[var(--primary)]/20">
-                        <Plus size={20} />
-                        SCHEDULE NEW
+                    <Button
+                        onClick={() => setIsAdding(true)}
+                        className="group shadow-primary/20 gap-3 transition-all active:scale-95"
+                    >
+                        <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-500" />
+                        <span className="font-black uppercase tracking-widest text-xs">Acknowledge New Visit</span>
                     </Button>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {appointments.map(apt => (
-                        <GlassCard key={apt.id} className="group hover:border-[var(--primary)] transition-all duration-300">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="p-3 bg-[var(--primary)]/10 text-[var(--primary)] rounded-2xl">
-                                    <Calendar size={24} />
-                                </div>
-                                <div className="flex gap-2 items-center">
-                                    <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${apt.status === 'scheduled' ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-gray-500'}`}>
-                                        {apt.status}
-                                    </div>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteAppointment(apt.id);
-                                        }}
-                                        className="p-2 hover:bg-red-500/10 text-[var(--secondary)] hover:text-red-500 rounded-lg transition-colors"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div>
-                                    <h3 className="text-xl font-black tracking-tight group-hover:text-[var(--primary)] transition-colors">{apt.provider?.name || "Dr. Unknown"}</h3>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)]">{apt.type}</p>
+                {/* Appointment Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {appointments.map((apt, index) => (
+                        <motion.div
+                            key={apt.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                        >
+                            <GlassCard variant="clay" className="relative overflow-hidden group !p-8 transition-all duration-500">
+                                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity text-primary">
+                                    <Stethoscope size={80} className="rotate-12" />
                                 </div>
 
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-3 text-sm font-bold text-[var(--secondary)]">
-                                        <Clock size={16} className="text-[var(--primary)]" />
-                                        <span>{new Date(apt.scheduledAt).toLocaleDateString()} • {new Date(apt.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                <div className="flex justify-between items-start mb-8 relative z-10">
+                                    <div className="w-14 h-14 rounded-2xl bg-white shadow-clay flex items-center justify-center text-primary transition-all duration-500">
+                                        {apt.type.toLowerCase().includes('video') ? <Video size={24} /> : <Calendar size={24} />}
                                     </div>
-                                    <div className="flex items-center gap-3 text-sm font-bold text-[var(--secondary)]">
-                                        <MapPin size={16} className="text-[var(--primary)]" />
-                                        <span className="truncate">{apt.provider?.address?.city}, {apt.provider?.address?.state}</span>
+                                    <div className="flex gap-2 items-center">
+                                        <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-clay ${apt.status === 'scheduled' ? 'bg-sky-50 text-primary border border-white/50' : 'bg-slate-50 text-slate-500 border border-white/50'}`}>
+                                            {apt.status}
+                                        </div>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleDeleteAppointment(apt.id);
+                                            }}
+                                            className="p-2.5 bg-white shadow-clay text-slate-400 hover:text-amber-500 rounded-xl transition-all duration-300"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                        </GlassCard>
+
+                                <div className="space-y-6 relative z-10">
+                                    <div>
+                                        <h3 className="text-xl font-black tracking-tight text-slate-900 mb-1 group-hover:text-primary transition-colors">{apt.provider?.name || "Unassigned Provider"}</h3>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{apt.type}</span>
+                                            <span className="w-1 h-1 rounded-full bg-slate-300" />
+                                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">{apt.provider?.specialty || "Specialist"}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3 pt-4 border-t border-slate-100/50">
+                                        <div className="flex items-center gap-4 text-sm font-bold text-slate-600">
+                                            <div className="p-2 bg-sky-50 rounded-lg shadow-inner">
+                                                <Clock size={16} className="text-primary" />
+                                            </div>
+                                            <span>{new Date(apt.scheduledAt).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })} • {new Date(apt.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                        </div>
+                                        <div className="flex items-center gap-4 text-sm font-bold text-slate-600">
+                                            <div className="p-2 bg-emerald-50 rounded-lg shadow-inner">
+                                                <MapPin size={16} className="text-emerald-500" />
+                                            </div>
+                                            <span className="truncate">{apt.provider?.address?.city}, {apt.provider?.address?.state}</span>
+                                        </div>
+                                    </div>
+
+                                    <Button variant="ghost" className="w-full mt-4 flex items-center justify-between group/btn py-4 bg-sky-50 shadow-clay hover:bg-white text-xs font-black uppercase tracking-widest text-slate-500 hover:text-primary transition-all">
+                                        View Clinical Notes
+                                        <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                                    </Button>
+                                </div>
+                            </GlassCard>
+                        </motion.div>
                     ))}
 
-                    <button
+                    <motion.button
+                        whileHover={{ scale: 1.02, y: -5 }}
+                        whileTap={{ scale: 0.98 }}
                         onClick={() => setIsAdding(true)}
-                        className="border-2 border-dashed border-[var(--color-glass-border)] rounded-3xl p-8 flex flex-col items-center justify-center min-h-[200px] gap-4 hover:bg-[var(--muted)]/30 hover:border-[var(--primary)] transition-all group"
+                        className="border-2 border-dashed border-slate-200 rounded-[2.5rem] p-12 flex flex-col items-center justify-center min-h-[360px] gap-6 group hover:border-primary/40 hover:bg-primary/5 transition-all duration-500 shadow-sm hover:shadow-clay"
                     >
-                        <div className="w-16 h-16 rounded-full bg-[var(--muted)]/50 flex items-center justify-center group-hover:bg-[var(--primary)]/10 transition-colors">
-                            <Plus size={32} className="text-[var(--secondary)] group-hover:text-[var(--primary)]" />
+                        <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-white group-hover:shadow-clay transition-all duration-500">
+                            <Plus size={40} className="text-slate-300 group-hover:text-primary group-hover:rotate-90 transition-all duration-500" />
                         </div>
-                        <span className="text-[10px] font-black uppercase tracking-tighter text-[var(--secondary)]">Add New Consult</span>
-                    </button>
+                        <div className="text-center">
+                            <h4 className="font-black uppercase tracking-[0.2em] text-sm text-slate-400 group-hover:text-primary transition-colors">Initialize New Consult</h4>
+                            <p className="text-[10px] font-bold text-slate-400/80 mt-2 max-w-[200px]">Secure clinical scheduling powered by Neural Link.</p>
+                        </div>
+                    </motion.button>
                 </div>
             </div>
 
             {/* Add Appointment Modal */}
-            {isAdding && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="w-full max-w-lg"
-                    >
-                        <GlassCard className="!p-8 shadow-2xl">
-                            <h2 className="text-2xl font-black mb-6 uppercase">Schedule Appointment</h2>
-                            <form onSubmit={handleAddAppointment} className="space-y-4">
-                                <div className="space-y-1 text-left">
-                                    <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-[var(--secondary)]">Doctor Name</label>
-                                    <input
-                                        required
-                                        className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-4 px-5 font-bold outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                                        placeholder="e.g. Dr. Tejas"
-                                        value={formData.providerName}
-                                        onChange={(e) => setFormData({ ...formData, providerName: e.target.value })}
-                                    />
+            <AnimatePresence>
+                {isAdding && (
+                    <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-[12px]">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            className="w-full max-w-xl"
+                        >
+                            <GlassCard variant="clay" className="!p-10 shadow-2xl relative overflow-visible">
+                                <div className="absolute top-[-50px] left-[-50px] w-40 h-40 bg-primary/5 rounded-full blur-3xl" />
+                                <div className="flex justify-between items-center mb-10 relative z-10">
+                                    <div>
+                                        <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Neural Sync</h2>
+                                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">Initialize Appointment Protocol</p>
+                                    </div>
+                                    <button
+                                        onClick={() => setIsAdding(false)}
+                                        className="p-3 bg-white border border-slate-100 rounded-full shadow-clay text-slate-400 hover:text-amber-500 transition-all"
+                                    >
+                                        <X size={20} />
+                                    </button>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="space-y-1 text-left">
-                                        <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-[var(--secondary)]">Date</label>
+
+                                <form onSubmit={handleAddAppointment} className="space-y-6 relative z-10">
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] ml-2 text-slate-400 flex items-center gap-2">
+                                            <User size={12} className="text-primary" /> Specialist / Provider
+                                        </label>
                                         <input
                                             required
-                                            type="date"
-                                            className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-4 px-5 font-bold outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                                            value={formData.date}
-                                            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                            className="w-full bg-sky-50/50 border-none rounded-2xl py-5 px-8 font-bold text-slate-900 outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-300 shadow-clay"
+                                            placeholder="e.g. Dr. Tejas Kute"
+                                            value={formData.providerName}
+                                            onChange={(e) => setFormData({ ...formData, providerName: e.target.value })}
                                         />
                                     </div>
-                                    <div className="space-y-1 text-left">
-                                        <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-[var(--secondary)]">Time</label>
+
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div className="space-y-2 text-left">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] ml-2 text-slate-400 flex items-center gap-2">
+                                                <Calendar size={12} className="text-primary" /> Target Date
+                                            </label>
+                                            <input
+                                                required
+                                                type="date"
+                                                className="w-full bg-sky-50/50 border-none rounded-2xl py-5 px-8 font-bold text-slate-900 outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-clay"
+                                                value={formData.date}
+                                                onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                                            />
+                                        </div>
+                                        <div className="space-y-2 text-left">
+                                            <label className="text-[10px] font-black uppercase tracking-[0.2em] ml-2 text-slate-400 flex items-center gap-2">
+                                                <Clock size={12} className="text-primary" /> Target Time
+                                            </label>
+                                            <input
+                                                required
+                                                type="time"
+                                                className="w-full bg-sky-50/50 border-none rounded-2xl py-5 px-8 font-bold text-slate-900 outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-clay"
+                                                value={formData.time}
+                                                onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-[10px] font-black uppercase tracking-[0.2em] ml-2 text-slate-400 flex items-center gap-2">
+                                            <Stethoscope size={12} className="text-primary" /> Nature of Consult
+                                        </label>
                                         <input
-                                            required
-                                            type="time"
-                                            className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-4 px-5 font-bold outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                                            value={formData.time}
-                                            onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                                            className="w-full bg-sky-50/50 border-none rounded-2xl py-5 px-8 font-bold text-slate-900 outline-none focus:ring-4 focus:ring-primary/10 transition-all placeholder:text-slate-300 shadow-clay"
+                                            placeholder="e.g. Heart Rate Review"
+                                            value={formData.type}
+                                            onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                                         />
                                     </div>
-                                </div>
-                                <div className="space-y-1 text-left">
-                                    <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-[var(--secondary)]">Reason / Type</label>
-                                    <input
-                                        className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-4 px-5 font-bold outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                                        placeholder="e.g. Heart Checkup"
-                                        value={formData.type}
-                                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                                    />
-                                </div>
-                                <div className="flex gap-4 pt-4">
-                                    <Button type="button" variant="secondary" className="flex-1 py-4 rounded-xl font-black" onClick={() => setIsAdding(false)}>CANCEL</Button>
-                                    <Button type="submit" className="flex-1 py-4 rounded-xl font-black shadow-lg shadow-[var(--primary)]/20">SAVE APPOINTMENT</Button>
-                                </div>
-                            </form>
-                        </GlassCard>
-                    </motion.div>
-                </div>
-            )}
+
+                                    <div className="flex gap-4 pt-8">
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            className="flex-1 py-5 rounded-2xl font-black uppercase tracking-widest text-xs"
+                                            onClick={() => setIsAdding(false)}
+                                        >
+                                            ABORT
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            className="flex-1 py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-primary/20 flex items-center justify-center gap-2"
+                                        >
+                                            <CheckCircle2 size={16} /> SYNC APPOINTMENT
+                                        </Button>
+                                    </div>
+                                </form>
+                            </GlassCard>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </DashboardLayout>
     );
 }

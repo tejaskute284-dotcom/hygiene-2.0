@@ -1,10 +1,10 @@
 "use client";
 
-import DashboardLayout from "@/components/layout/DashboardLayout";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Shield, Lock, Bell, User as UserIcon, Eye, Smartphone, Zap, Loader2, Link as LinkIcon, AlertTriangle, Activity } from "lucide-react";
+import DashboardLayout from "@/components/layout/DashboardLayout";
+import { Shield, Lock, Bell, User as UserIcon, Eye, Smartphone, Zap, Loader2, Link as LinkIcon, AlertTriangle, Activity, X, ChevronRight, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { usersApi } from "@/lib/api";
@@ -15,7 +15,6 @@ type Tab = 'Profile' | 'Security' | 'Notifications' | 'Accessibility' | 'Connect
 export default function SettingsPage() {
     const [activeTab, setActiveTab] = useState<Tab>('Profile');
     const [is2FAEnabled, setIs2FAEnabled] = useState(false);
-    const [show2FASetup, setShow2FASetup] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [profile, setProfile] = useState<any>(null);
@@ -58,8 +57,8 @@ export default function SettingsPage() {
     if (isLoading) {
         return (
             <DashboardLayout>
-                <div className="flex items-center justify-center h-screen -mt-24">
-                    <Loader2 className="w-12 h-12 animate-spin text-[var(--primary)]" />
+                <div className="flex items-center justify-center h-[60vh]">
+                    <Loader2 className="w-12 h-12 animate-spin text-primary" />
                 </div>
             </DashboardLayout>
         );
@@ -67,109 +66,119 @@ export default function SettingsPage() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-6xl mx-auto space-y-8 pb-20">
-                <div className="flex justify-between items-end">
+            <div className="space-y-12 pb-20 animate-in fade-in slide-in-from-bottom-6 duration-1000">
+
+                {/* Header Section */}
+                <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
                     <div>
-                        <h1 className="text-4xl font-black tracking-tight mb-2">Settings</h1>
-                        <p className="text-[var(--secondary)] font-medium">Manage your security, notifications, and accessibility preferences.</p>
+                        <h1 className="text-section mb-3">System Nexus</h1>
+                        <p className="text-subhead max-w-lg">
+                            Configure your health intelligence environment and security protocols.
+                        </p>
                     </div>
                     {isSaving && (
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="flex items-center gap-2 text-[var(--primary)] text-sm font-bold bg-[var(--primary)]/10 px-4 py-2 rounded-full border border-[var(--primary)]/20"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="flex items-center gap-2 text-primary font-black bg-primary/10 px-8 py-4 rounded-2xl border border-primary/20 shadow-clay"
                         >
                             <Loader2 className="w-4 h-4 animate-spin" />
-                            SYNCING...
+                            SYNCING PROTOCOLS...
                         </motion.div>
                     )}
-                </div>
+                </header>
 
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    {/* Navigation Sidebar */}
-                    <div className="lg:col-span-1 space-y-2">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <nav className="lg:col-span-3 space-y-6">
                         {(['Profile', 'Security', 'Notifications', 'Accessibility', 'Connected Apps'] as Tab[]).map((tab) => (
                             <button
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
-                                className={`w-full text-left px-5 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all duration-300 relative overflow-hidden group ${activeTab === tab
-                                    ? 'text-white bg-[var(--primary)] shadow-xl shadow-[var(--primary)]/20'
-                                    : 'text-[var(--secondary)] hover:bg-[var(--muted)]/50'
+                                className={`w-full flex items-center justify-between px-8 py-6 rounded-[2rem] font-black uppercase tracking-widest text-[10px] transition-all duration-300 relative group overflow-hidden ${activeTab === tab
+                                    ? 'text-primary bg-white shadow-clay'
+                                    : 'text-slate-400 hover:bg-white/50 hover:shadow-clay/50'
                                     }`}
                             >
                                 <span className="relative z-10">{tab}</span>
+                                {activeTab === tab && <ChevronRight className="w-4 h-4 relative z-10" />}
                                 {activeTab === tab && (
                                     <motion.div
-                                        layoutId="active-tab-bg"
-                                        className="absolute inset-0 bg-gradient-to-r from-[var(--primary)] to-[var(--accent)]"
+                                        layoutId="active-tab-indicator"
+                                        className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-primary rounded-full shadow-clay"
                                     />
                                 )}
                             </button>
                         ))}
-                    </div>
+                    </nav>
 
                     {/* Content Area */}
-                    <div className="lg:col-span-3">
+                    <section className="lg:col-span-9">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeTab}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                transition={{ duration: 0.3 }}
-                                className="space-y-6"
+                                initial={{ opacity: 0, scale: 0.98, y: 10 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.98, y: -10 }}
+                                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                className="space-y-10"
                             >
                                 {activeTab === 'Profile' && (
-                                    <div className="space-y-6">
-                                        <GlassCard className="flex flex-col md:flex-row items-center gap-8 p-10">
-                                            <div className="relative group">
-                                                <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-[var(--primary)] to-[var(--accent)] flex items-center justify-center text-white text-4xl font-bold shadow-2xl ring-8 ring-[var(--primary)]/10">
-                                                    {profile?.firstName?.[0]}{profile?.lastName?.[0]}
-                                                </div>
-                                                <button className="absolute bottom-0 right-0 p-2 bg-white rounded-full shadow-lg border border-gray-100 text-[var(--primary)] hover:scale-110 transition-transform">
-                                                    <Smartphone size={16} />
-                                                </button>
-                                            </div>
-                                            <div className="flex-1 text-center md:text-left space-y-4">
-                                                <div>
-                                                    <h3 className="text-3xl font-black tracking-tight">{profile?.firstName} {profile?.lastName}</h3>
-                                                    <p className="text-[var(--secondary)] font-medium">{profile?.email}</p>
-                                                </div>
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <div className="bg-[var(--muted)]/50 p-4 rounded-2xl">
-                                                        <p className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)] mb-1">Timezone</p>
-                                                        <p className="text-sm font-bold">{profile?.timezone || 'GMT -5 (EST)'}</p>
+                                    <div className="space-y-10">
+                                        <GlassCard variant="clay" className="!p-10">
+                                            <div className="flex flex-col md:flex-row items-center gap-12">
+                                                <div className="relative">
+                                                    <div className="w-44 h-44 rounded-[3.5rem] bg-gradient-to-tr from-primary to-emerald-400 flex items-center justify-center text-white text-6xl font-black shadow-clay ring-[15px] ring-sky-50 transition-transform hover:scale-105 duration-500">
+                                                        {profile?.firstName?.[0]}{profile?.lastName?.[0]}
                                                     </div>
-                                                    <div className="bg-[var(--muted)]/50 p-4 rounded-2xl">
-                                                        <p className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)] mb-1">Language</p>
-                                                        <p className="text-sm font-bold">English (US)</p>
+                                                    <button className="absolute -bottom-2 -right-2 p-5 bg-white border border-white rounded-[2rem] shadow-clay text-primary hover:scale-110 transition-transform">
+                                                        <Activity className="w-7 h-7" />
+                                                    </button>
+                                                </div>
+                                                <div className="flex-1 text-center md:text-left">
+                                                    <h3 className="text-3xl font-black text-slate-900 tracking-tight mb-2">{profile?.firstName} {profile?.lastName}</h3>
+                                                    <p className="text-sm font-bold text-slate-400 mb-8">{profile?.email}</p>
+                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                                        <div className="bg-sky-50/30 p-6 rounded-[2rem] border border-white shadow-clay">
+                                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Primary Region</p>
+                                                            <p className="text-xs font-black text-slate-900">{profile?.timezone || 'GMT -5 (EST)'}</p>
+                                                        </div>
+                                                        <div className="bg-emerald-50/30 p-6 rounded-[2rem] border border-white shadow-clay">
+                                                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Native Language</p>
+                                                            <p className="text-xs font-black text-slate-900">English (Digital Standard)</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </GlassCard>
 
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <GlassCard>
-                                                <h4 className="text-lg font-black mb-4 uppercase tracking-tighter">Identity Details</h4>
-                                                <div className="space-y-4">
-                                                    <div className="space-y-1">
-                                                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)]">First Name</label>
-                                                        <input defaultValue={profile?.firstName} className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-[var(--primary)] font-bold" />
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                            <GlassCard className="!p-10 group hover:border-primary/20 transition-all">
+                                                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-8">Identity Interface</h4>
+                                                <div className="space-y-8">
+                                                    <div className="space-y-3">
+                                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">FIRST NAME</label>
+                                                        <input defaultValue={profile?.firstName} className="w-full bg-sky-50/50 border-none rounded-2xl py-5 px-8 font-bold text-slate-900 outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-clay" />
                                                     </div>
-                                                    <div className="space-y-1">
-                                                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)]">Last Name</label>
-                                                        <input defaultValue={profile?.lastName} className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-[var(--primary)] font-bold" />
+                                                    <div className="space-y-3">
+                                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">LAST NAME</label>
+                                                        <input defaultValue={profile?.lastName} className="w-full bg-sky-50/50 border-none rounded-2xl py-5 px-8 font-bold text-slate-900 outline-none focus:ring-4 focus:ring-primary/10 transition-all shadow-clay" />
                                                     </div>
+                                                    <Button variant="primary" className="w-full shadow-primary/20">UPDATE PROFILE</Button>
                                                 </div>
                                             </GlassCard>
-                                            <GlassCard>
-                                                <h4 className="text-lg font-black mb-4 uppercase tracking-tighter">Contact Preferences</h4>
-                                                <div className="space-y-4">
-                                                    <div className="space-y-1">
-                                                        <label className="text-[10px] font-black uppercase tracking-widest text-[var(--secondary)]">Phone Number</label>
-                                                        <input defaultValue={profile?.phone || "Not Set"} className="w-full bg-[var(--muted)]/50 border-none rounded-xl py-3 px-4 outline-none focus:ring-2 focus:ring-[var(--primary)] font-bold text-[var(--secondary)]" />
+                                            <GlassCard className="!p-10 group hover:border-secondary/20 transition-all">
+                                                <h4 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-8">Neuro-Security</h4>
+                                                <div className="space-y-8">
+                                                    <div className="space-y-3">
+                                                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">SYNCED PHONE</label>
+                                                        <input defaultValue={profile?.phone || "NOT INITIALIZED"} className="w-full bg-slate-50 border-none rounded-2xl py-5 px-8 font-bold text-slate-300 outline-none focus:ring-4 focus:ring-primary/10 transition-all" />
                                                     </div>
-                                                    <Button className="w-full py-4 rounded-xl mt-2 font-black">SAVE CHANGES</Button>
+                                                    <div className="p-6 bg-secondary/5 rounded-[2rem] border border-secondary/10 flex items-center gap-6">
+                                                        <div className="p-3 bg-white rounded-2xl shadow-clay text-secondary">
+                                                            <Shield className="w-6 h-6" />
+                                                        </div>
+                                                        <p className="text-[10px] font-bold text-secondary/80 leading-relaxed uppercase tracking-widest">Medical data is encrypted via 256-bit Synapse Protocol.</p>
+                                                    </div>
                                                 </div>
                                             </GlassCard>
                                         </div>
@@ -177,73 +186,74 @@ export default function SettingsPage() {
                                 )}
 
                                 {activeTab === 'Security' && (
-                                    <div className="space-y-6">
-                                        <GlassCard className="relative overflow-hidden">
-                                            <div className="absolute top-0 right-0 p-8 opacity-5">
-                                                <Shield size={120} />
-                                            </div>
-                                            <div className="flex items-center justify-between mb-8">
+                                    <div className="space-y-10">
+                                        <GlassCard variant="clay" className="relative overflow-hidden !p-12 group">
+                                            <Shield className="absolute top-[-40px] right-[-40px] w-80 h-80 opacity-[0.03] rotate-12 text-primary group-hover:opacity-[0.05] transition-opacity duration-1000" />
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-16 relative z-10">
                                                 <div>
-                                                    <h3 className="text-2xl font-black tracking-tight mb-2">Security Hub</h3>
-                                                    <p className="text-[var(--secondary)] font-medium">Protect your health data with biometric & logic-based controls.</p>
+                                                    <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Security Nexus</h3>
+                                                    <p className="text-sm font-medium text-slate-400 max-w-md">Autonomous biometric and multi-factor shielding protocols.</p>
                                                 </div>
-                                                <div className="px-4 py-2 bg-green-500/10 text-green-500 rounded-full text-[10px] font-black uppercase border border-green-500/20">
-                                                    System Secure
+                                                <div className="px-8 py-3 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-white shadow-clay inline-flex items-center gap-3">
+                                                    <CheckCircle2 className="w-4 h-4" /> LINK OPTIMAL
                                                 </div>
                                             </div>
 
-                                            <div className="space-y-4">
-                                                <div className="flex items-center justify-between p-6 bg-[var(--muted)]/50 rounded-3xl border border-[var(--color-glass-border)]">
-                                                    <div className="flex gap-4">
-                                                        <div className="p-3 bg-blue-500/10 text-blue-500 rounded-2xl h-fit">
-                                                            <Smartphone size={24} />
+                                            <div className="space-y-6 relative z-10">
+                                                <div className="flex items-center justify-between p-10 bg-sky-50/30 rounded-[2.5rem] border border-white shadow-clay transition-all duration-500">
+                                                    <div className="flex gap-8">
+                                                        <div className="p-5 bg-white text-emerald-500 rounded-2xl h-fit shadow-clay">
+                                                            <Smartphone className="w-7 h-7" />
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-bold">Two-Step Authentication</h4>
-                                                            <p className="text-xs text-[var(--secondary)] mt-1">Requires a secure 6-digit code for every login attempt.</p>
+                                                            <h4 className="text-lg font-black text-slate-900">Neural MFA</h4>
+                                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Requires biometric hash for every lifecycle sync.</p>
                                                         </div>
                                                     </div>
                                                     <button
                                                         onClick={() => setIs2FAEnabled(!is2FAEnabled)}
-                                                        className={`w-14 h-8 rounded-full p-1 transition-colors ${is2FAEnabled ? 'bg-green-500' : 'bg-gray-300'}`}
+                                                        className={`w-20 h-10 rounded-full p-2 transition-all duration-500 shadow-inner ${is2FAEnabled ? 'bg-emerald-400' : 'bg-slate-200'}`}
                                                     >
-                                                        <motion.div animate={{ x: is2FAEnabled ? 24 : 0 }} className="w-6 h-6 bg-white rounded-full shadow-lg" />
+                                                        <motion.div
+                                                            animate={{ x: is2FAEnabled ? 40 : 0 }}
+                                                            className="w-6 h-6 bg-white rounded-full shadow-clay"
+                                                        />
                                                     </button>
                                                 </div>
 
-                                                <div className="flex items-center justify-between p-6 bg-[var(--muted)]/50 rounded-3xl border border-[var(--color-glass-border)]">
-                                                    <div className="flex gap-4">
-                                                        <div className="p-3 bg-purple-500/10 text-purple-500 rounded-2xl h-fit">
-                                                            <Lock size={24} />
+                                                <div className="flex items-center justify-between p-10 bg-sky-50/30 rounded-[2.5rem] border border-white shadow-clay transition-all duration-500">
+                                                    <div className="flex gap-8">
+                                                        <div className="p-5 bg-white text-primary rounded-2xl h-fit shadow-clay">
+                                                            <Lock className="w-7 h-7" />
                                                         </div>
                                                         <div>
-                                                            <h4 className="font-bold">Password Management</h4>
-                                                            <p className="text-xs text-[var(--secondary)] mt-1">Last changed 2 months ago. Use a strong, unique password.</p>
+                                                            <h4 className="text-lg font-black text-slate-900">Quantum Keys</h4>
+                                                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Automatic rotation enabled. Last cycle: 48h ago.</p>
                                                         </div>
                                                     </div>
-                                                    <Button variant="ghost" className="font-black text-[10px] uppercase">Update</Button>
+                                                    <Button variant="outline" className="font-black text-[10px] uppercase tracking-widest py-4 px-8 rounded-2xl border-white shadow-clay bg-white/50">INITIATE ROTATION</Button>
                                                 </div>
                                             </div>
                                         </GlassCard>
 
-                                        <GlassCard>
-                                            <h4 className="text-lg font-black mb-6 uppercase tracking-tighter">Login Activity</h4>
-                                            <div className="space-y-4">
+                                        <GlassCard className="!p-10 border-primary/5">
+                                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-10">ACCESS STREAM</h4>
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 {[
-                                                    { device: 'iPhone 15 Pro', location: 'New York, USA', time: 'Active Now', current: true },
-                                                    { device: 'Windows Desktop', location: 'London, UK', time: '2 days ago', current: false },
+                                                    { device: 'Neural iPhone 15', location: 'Metropolis, USA', time: 'ACTIVE NOW', current: true },
+                                                    { device: 'Windows Nexus Hub', location: 'London, UK', time: '3 CYCLES AGO', current: false },
                                                 ].map((session, i) => (
-                                                    <div key={i} className="flex items-center justify-between p-4 bg-[var(--muted)]/30 rounded-2xl">
-                                                        <div className="flex gap-4">
-                                                            <div className="p-2 bg-white rounded-xl shadow-sm">
-                                                                <Smartphone size={20} className="text-[var(--secondary)]" />
+                                                    <div key={i} className="flex items-center justify-between p-8 bg-slate-50/50 rounded-[2rem] border border-primary/5 group hover:bg-white hover:shadow-clay transition-all duration-500">
+                                                        <div className="flex gap-6">
+                                                            <div className="p-4 bg-white rounded-2xl shadow-clay">
+                                                                <Smartphone size={24} className="text-primary" />
                                                             </div>
                                                             <div>
-                                                                <p className="text-sm font-bold">{session.device}</p>
-                                                                <p className="text-[10px] text-[var(--secondary)] font-medium uppercase">{session.location}</p>
+                                                                <p className="font-black text-slate-900 text-sm">{session.device}</p>
+                                                                <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest mt-1">{session.location}</p>
                                                             </div>
                                                         </div>
-                                                        <span className={`text-[10px] font-black uppercase ${session.current ? 'text-green-500' : 'text-[var(--secondary)]'}`}>
+                                                        <span className={`text-[8px] font-black uppercase tracking-widest ${session.current ? 'text-green-500' : 'text-slate-300'}`}>
                                                             {session.time}
                                                         </span>
                                                     </div>
@@ -254,41 +264,46 @@ export default function SettingsPage() {
                                 )}
 
                                 {activeTab === 'Accessibility' && (
-                                    <div className="space-y-6">
-                                        <GlassCard>
-                                            <h3 className="text-2xl font-black mb-2">Display & Interaction</h3>
-                                            <p className="text-[var(--secondary)] font-medium mb-8 text-sm">Adaptive interface scaling based on your cognitive and visual needs.</p>
+                                    <div className="space-y-10">
+                                        <GlassCard variant="clay" className="!p-12">
+                                            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Display Architecture</h3>
+                                            <p className="text-sm font-medium text-slate-400 mb-16">Interface scaling optimized for high-fidelity cognitive stability.</p>
 
-                                            <div className="space-y-8">
-                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                    {(['simple', 'standard', 'power'] as const).map((mode) => (
-                                                        <button
-                                                            key={mode}
-                                                            onClick={() => handleModeChange(mode)}
-                                                            className={`p-6 rounded-3xl border-2 transition-all text-left space-y-3 ${accessibilityMode === mode
-                                                                ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-4 ring-[var(--primary)]/10'
-                                                                : 'border-[var(--color-glass-border)] hover:border-[var(--secondary)]'
-                                                                }`}
-                                                        >
-                                                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${accessibilityMode === mode ? 'bg-[var(--primary)] text-white' : 'bg-[var(--muted)] text-[var(--secondary)]'
-                                                                }`}>
-                                                                {mode === 'simple' ? <Zap size={20} /> : mode === 'standard' ? <UserIcon size={20} /> : <Zap size={20} />}
-                                                            </div>
-                                                            <h4 className="font-black uppercase tracking-widest text-xs">{mode}</h4>
-                                                            <p className="text-[10px] text-[var(--secondary)] leading-relaxed">
-                                                                {mode === 'simple' && 'High contrast, simplified navigation for maximum focus.'}
-                                                                {mode === 'standard' && 'Balanced experience with standard interactive elements.'}
-                                                                {mode === 'power' && 'Dense data visualization for power users.'}
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                                                {(['simple', 'standard', 'power'] as const).map((mode) => (
+                                                    <button
+                                                        key={mode}
+                                                        onClick={() => handleModeChange(mode)}
+                                                        className={`p-10 rounded-[2.5rem] border-2 transition-all text-left space-y-8 group relative overflow-hidden ${accessibilityMode === mode
+                                                            ? 'border-primary bg-sky-50 shadow-inner'
+                                                            : 'border-transparent bg-white shadow-clay'
+                                                            }`}
+                                                    >
+                                                        <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-transform group-hover:scale-110 ${accessibilityMode === mode ? 'bg-primary text-white shadow-clay' : 'bg-sky-50 text-primary shadow-inner border border-white'
+                                                            }`}>
+                                                            {mode === 'simple' ? <Zap size={28} /> : mode === 'standard' ? <UserIcon size={28} /> : <Zap size={28} />}
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="font-black uppercase tracking-[0.2em] text-[10px] mb-3 text-slate-900">{mode} Protocol</h4>
+                                                            <p className="text-[11px] font-bold leading-relaxed text-slate-500">
+                                                                {mode === 'simple' && 'High contrast, minimal clutter focus.'}
+                                                                {mode === 'standard' && 'Standard healthcare OS balance.'}
+                                                                {mode === 'power' && 'Dense neural data visualization.'}
                                                             </p>
-                                                        </button>
-                                                    ))}
-                                                </div>
+                                                        </div>
+                                                        {accessibilityMode === mode && (
+                                                            <motion.div layoutId="mode-check" className="absolute top-6 right-6 text-primary">
+                                                                <CheckCircle2 size={24} />
+                                                            </motion.div>
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
 
-                                                <div className="pt-6 border-t border-[var(--color-glass-border)]">
-                                                    <h4 className="font-black mb-4 uppercase text-xs tracking-widest">Theme Synthesis</h4>
-                                                    <div className="flex justify-center p-8 bg-[var(--muted)]/20 rounded-3xl">
-                                                        <ThemeToggle />
-                                                    </div>
+                                            <div className="pt-16 border-t border-slate-100/50 text-center">
+                                                <h4 className="font-black mb-10 uppercase text-[10px] tracking-[0.3em] text-slate-400">INTERFACE SYNTHESIS</h4>
+                                                <div className="inline-flex p-12 bg-white rounded-[4rem] border border-white shadow-clay">
+                                                    <ThemeToggle />
                                                 </div>
                                             </div>
                                         </GlassCard>
@@ -296,95 +311,94 @@ export default function SettingsPage() {
                                 )}
 
                                 {activeTab === 'Notifications' && (
-                                    <div className="space-y-6">
-                                        <GlassCard>
-                                            <h3 className="text-2xl font-black mb-6">Proactive Alerts</h3>
-                                            <div className="space-y-2">
+                                    <div className="space-y-10">
+                                        <GlassCard variant="clay" className="!p-12">
+                                            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-12">Alert Matrix</h3>
+                                            <div className="space-y-6">
                                                 {[
-                                                    { title: 'Medication Reminders', desc: 'Push notifications when it is time for your meds.', color: 'text-blue-500' },
-                                                    { title: 'Appointment Alerts', desc: 'Reminders 24 hours before your scheduled visit.', color: 'text-purple-500' },
-                                                    { title: 'Health Stability Reports', desc: 'Weekly summary of your health stability score.', color: 'text-green-500' },
-                                                    { title: 'Security Logins', desc: 'Real-time alerts for login attempts on new devices.', color: 'text-orange-500' },
+                                                    { title: 'Medication Adherence', desc: 'Real-time cabinet life-cycle alerts.', color: 'from-sky-400 to-primary' },
+                                                    { title: 'Clinical Life-Cycle', desc: 'Pre-visit and post-visit data sync.', color: 'from-emerald-400 to-emerald-600' },
+                                                    { title: 'Biometric Delta Reports', desc: 'Critical alerts for vital drift.', color: 'from-amber-400 to-amber-600' },
+                                                    { title: 'Neural Shield Alerts', desc: 'Real-time identity access monitoring.', color: 'from-slate-400 to-slate-600' },
                                                 ].map((item, i) => (
-                                                    <div key={i} className="flex items-center justify-between p-5 hover:bg-[var(--muted)]/30 rounded-2xl transition-colors">
+                                                    <div key={i} className="flex items-center justify-between p-10 bg-white rounded-[2.5rem] shadow-clay border-2 border-white/50 group hover:shadow-inner transition-all duration-500 cursor-pointer">
                                                         <div className="flex-1">
-                                                            <h4 className="font-bold mb-1">{item.title}</h4>
-                                                            <p className="text-xs text-[var(--secondary)]">{item.desc}</p>
+                                                            <h4 className="text-lg font-black text-slate-900 mb-1">{item.title}</h4>
+                                                            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{item.desc}</p>
                                                         </div>
-                                                        <div className="w-12 h-6 rounded-full bg-green-500 p-1">
-                                                            <div className="w-4 h-4 bg-white rounded-full ml-auto" />
+                                                        <div className={`w-16 h-8 rounded-full bg-gradient-to-r ${item.color} p-1.5 shadow-clay group-hover:scale-110 transition-transform`}>
+                                                            <div className="w-5 h-5 bg-white rounded-full ml-auto shadow-sm" />
                                                         </div>
                                                     </div>
                                                 ))}
                                             </div>
                                         </GlassCard>
-                                        <GlassCard className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white border-none shadow-blue-500/30">
-                                            <div className="flex items-center gap-4">
-                                                <div className="p-3 bg-white/20 rounded-2xl h-fit">
-                                                    <Smartphone size={24} />
+                                        <GlassCard variant="clay" className="bg-gradient-to-br from-primary to-sky-400 text-white border-none !p-16 shadow-2xl shadow-primary/30 relative overflow-hidden group">
+                                            <Smartphone className="absolute bottom-[-60px] right-[-60px] w-96 h-96 opacity-10 -rotate-12 group-hover:scale-110 transition-transform duration-1000" />
+                                            <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+                                                <div className="p-8 bg-white/20 rounded-[2.5rem] backdrop-blur-xl shadow-clay border border-white/20">
+                                                    <Smartphone size={48} className="text-white" />
                                                 </div>
-                                                <div className="flex-1">
-                                                    <h4 className="font-black text-lg uppercase tracking-tight">Sync to Mobile</h4>
-                                                    <p className="text-sm opacity-80 mt-1 font-medium">Get critical alerts directly on your smartphone with our iOS/Android app.</p>
+                                                <div className="flex-1 text-center md:text-left">
+                                                    <h4 className="text-3xl font-black uppercase tracking-tight mb-3">Sync to Mobile</h4>
+                                                    <p className="text-lg opacity-90 font-black">Get critical biometric alerts directly on your neural link.</p>
                                                 </div>
-                                                <Button variant="ghost" className="text-white hover:bg-white/10 font-black">GET APP</Button>
+                                                <Button variant="ghost" className="text-white border-2 border-white/40 hover:bg-white/10 text-xs font-black uppercase tracking-widest py-6 px-12 rounded-[2rem] backdrop-blur-md shadow-clay">ACTIVATE LINK</Button>
                                             </div>
                                         </GlassCard>
                                     </div>
                                 )}
 
                                 {activeTab === 'Connected Apps' && (
-                                    <div className="space-y-6">
-                                        <GlassCard>
-                                            <h3 className="text-2xl font-black mb-2">Integrations</h3>
-                                            <p className="text-[var(--secondary)] font-medium mb-8 text-sm">Grant Synapse Care access to your existing health ecosystem.</p>
+                                    <div className="space-y-10">
+                                        <GlassCard variant="clay" className="!p-12">
+                                            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">Neural Bridges</h3>
+                                            <p className="text-sm font-medium text-slate-400 mb-16">Authorized health intelligence ecosystem integrations.</p>
 
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                 {[
-                                                    { name: 'Apple Health', status: 'Connected', icon: <Smartphone className="text-red-500" /> },
-                                                    { name: 'Google Fit', status: 'Disconnected', icon: <Smartphone className="text-blue-500" /> },
-                                                    { name: 'MyFitnessPal', status: 'Connected', icon: <Activity className="text-blue-400" /> },
-                                                    { name: 'Withings Scale', status: 'Disconnected', icon: <Smartphone className="text-gray-500" /> },
+                                                    { name: 'Synapse Mobile', status: 'ACTIVE SYNC', icon: <Smartphone className="text-sky-500" /> },
+                                                    { name: 'Neural Watch OS', status: 'LATENT', icon: <Activity className="text-slate-400" /> },
+                                                    { name: 'Atlas Health', status: 'ACTIVE SYNC', icon: <Activity className="text-emerald-500" /> },
+                                                    { name: 'Legacy Link', status: 'LATENT', icon: <LinkIcon className="text-slate-400" /> },
                                                 ].map((app, i) => (
-                                                    <div key={i} className="p-6 bg-[var(--muted)]/30 rounded-3xl border border-[var(--color-glass-border)] flex items-center justify-between group hover:bg-[var(--primary)]/5 transition-colors">
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="p-3 bg-white rounded-2xl shadow-sm text-[var(--primary)]">
-                                                                <LinkIcon size={20} />
+                                                    <div key={i} className="p-10 bg-white rounded-[3rem] shadow-clay border-2 border-white/50 flex items-center justify-between group transition-all duration-500">
+                                                        <div className="flex items-center gap-8">
+                                                            <div className="p-5 bg-sky-50 rounded-2xl text-primary shadow-inner border border-white">
+                                                                <LinkIcon size={28} />
                                                             </div>
                                                             <div>
-                                                                <h4 className="font-bold">{app.name}</h4>
-                                                                <p className={`text-[10px] font-black uppercase tracking-widest ${app.status === 'Connected' ? 'text-green-500' : 'text-[var(--secondary)]'}`}>
+                                                                <h4 className="text-lg font-black text-slate-900">{app.name}</h4>
+                                                                <p className={`text-[9px] font-black uppercase tracking-[0.2em] mt-1 ${app.status === 'ACTIVE SYNC' ? 'text-emerald-500' : 'text-slate-300'}`}>
                                                                     {app.status}
                                                                 </p>
                                                             </div>
                                                         </div>
-                                                        <Button variant="ghost" size="sm" className="font-black text-[10px] uppercase opacity-0 group-hover:opacity-100 transition-opacity">
-                                                            {app.status === 'Connected' ? 'MANAGE' : 'CONNECT'}
+                                                        <Button variant="clay" size="sm" className="font-black text-[9px] uppercase tracking-widest py-3 shadow-clay opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                                                            {app.status === 'ACTIVE SYNC' ? 'SYNC' : 'LINK'}
                                                         </Button>
                                                     </div>
                                                 ))}
                                             </div>
                                         </GlassCard>
 
-                                        <GlassCard className="border-dashed border-2 flex flex-col items-center justify-center p-12 text-center space-y-4">
-                                            <div className="p-4 bg-[var(--muted)] rounded-full text-[var(--secondary)]">
-                                                <Zap size={32} />
+                                        <GlassCard variant="clay" className="flex flex-col items-center justify-center !p-20 text-center space-y-10 group transition-all duration-1000 bg-emerald-50/20">
+                                            <div className="p-8 bg-white rounded-full text-emerald-500 shadow-clay group-hover:scale-110 transition-transform">
+                                                <Zap size={56} />
                                             </div>
                                             <div>
-                                                <h4 className="font-black text-lg">Suggest an Integration</h4>
-                                                <p className="text-sm text-[var(--secondary)] max-w-sm">We are constantly expanding our ecosystem. Tell us which medical devices or apps you want to connect.</p>
+                                                <h4 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">Request Architecture</h4>
+                                                <p className="text-sm font-medium text-slate-400 max-w-sm mx-auto leading-relaxed uppercase tracking-widest">Help us expand the Synapse Neural Network.</p>
                                             </div>
-                                            <Button variant="outline" className="px-8 rounded-full font-black">SEND REQUEST</Button>
+                                            <Button variant="clay" className="px-16 shadow-clay">INITIATE REQUEST</Button>
                                         </GlassCard>
                                     </div>
                                 )}
                             </motion.div>
                         </AnimatePresence>
-                    </div>
+                    </section>
                 </div>
             </div>
         </DashboardLayout>
     );
 }
-
-
