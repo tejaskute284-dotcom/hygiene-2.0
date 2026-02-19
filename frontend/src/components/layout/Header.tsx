@@ -77,22 +77,22 @@ export function Header() {
             </div>
 
             <div className="flex items-center gap-8">
-                {/* Advanced Mode Switcher - Elevated */}
-                <div className="p-1 flex rounded-2xl bg-white/5 border border-white/10 shadow-2xl overflow-hidden backdrop-blur-md">
+                {/* Mode Switcher - Claymorphism */}
+                <div className="p-1.5 flex rounded-[1.25rem] bg-[var(--surface)] border border-[var(--clay-border)] [box-shadow:var(--clay-shadow-sm)]">
                     {(['simple', 'standard', 'power'] as const).map((mode) => (
                         <button
                             key={mode}
                             onClick={() => handleModeChange(mode)}
-                            className={`relative px-6 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all duration-500 ${accessibilityMode === mode
-                                ? 'text-black'
-                                : 'text-[var(--secondary)] hover:text-white'
+                            className={`relative px-5 py-2 rounded-2xl text-[10px] font-bold uppercase tracking-widest transition-all duration-300 ${accessibilityMode === mode
+                                ? 'text-white shadow-md'
+                                : 'text-[var(--foreground-muted)] hover:text-[var(--foreground)] hover:bg-[var(--muted)]'
                                 }`}
                         >
                             {accessibilityMode === mode && (
                                 <motion.div
                                     layoutId="header-mode-pill"
-                                    className="absolute inset-0 bg-[#00E5FF] shadow-[0_0_20px_rgba(0,229,255,0.4)] rounded-xl"
-                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                    className="absolute inset-0 bg-[var(--secondary)] rounded-2xl z-0"
+                                    transition={{ type: "spring", bounce: 0.15, duration: 0.5 }}
                                 />
                             )}
                             <span className="relative z-10">{mode}</span>
@@ -109,7 +109,7 @@ export function Header() {
                                 setIsNotificationsOpen(!isNotificationsOpen);
                                 setIsUserMenuOpen(false);
                             }}
-                            className={`w-12 h-12 rounded-2xl flex items-center justify-center relative transition-all duration-500 ${isNotificationsOpen ? 'bg-[#00E5FF] text-black shadow-[0_0_30px_#00E5FF]' : 'bg-[#0c0e14] text-white hover:bg-neutral-900 border border-white/10'}`}
+                            className={`w-12 h-12 rounded-2xl flex items-center justify-center relative transition-all duration-500 ${isNotificationsOpen ? 'bg-[var(--primary)] text-black shadow-[0_0_30px_var(--glow-primary)]' : 'bg-[var(--muted)] text-[var(--foreground)] hover:bg-[var(--muted)] border border-[var(--glass-border)]'}`}
                         >
                             <Bell className={`w-5 h-5 ${!isNotificationsOpen && 'group-hover:rotate-12 transition-transform'}`} />
                             {unreadCount > 0 && (
@@ -123,7 +123,7 @@ export function Header() {
                                     initial={{ opacity: 0, y: 15, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                                    className="absolute top-16 right-0 w-96 bg-[#080a0f] border border-white/10 rounded-[2.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] overflow-hidden z-50 backdrop-blur-3xl text-white"
+                                    className="absolute top-16 right-0 w-96 bg-[var(--background)] border border-[var(--glass-border)] rounded-[2.5rem] shadow-2xl overflow-hidden z-50 backdrop-blur-3xl text-[var(--foreground)]"
                                 >
                                     <div className="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
                                         <div className="flex items-center gap-2">
@@ -158,7 +158,7 @@ export function Header() {
                                                             <p className="text-xs font-black tracking-tight uppercase group-hover:text-[#00E5FF] transition-colors">{n.title}</p>
                                                             <span className="text-[8px] font-black uppercase tracking-widest opacity-30">{n.time}</span>
                                                         </div>
-                                                        <p className="text-[10px] text-neutral-400 font-medium leading-relaxed">{n.message}</p>
+                                                        <p className="text-[10px] text-[var(--secondary)] font-medium leading-relaxed">{n.message}</p>
                                                     </div>
                                                 </div>
                                             ))
@@ -177,7 +177,7 @@ export function Header() {
                                 setIsUserMenuOpen(!isUserMenuOpen);
                                 setIsNotificationsOpen(false);
                             }}
-                            className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black font-black shadow-2xl cursor-pointer overflow-hidden relative border border-white/10"
+                            className="w-12 h-12 rounded-2xl bg-[var(--primary)] flex items-center justify-center text-black font-black shadow-2xl cursor-pointer overflow-hidden relative border border-[var(--glass-border)]"
                         >
                             <User className="w-6 h-6" />
                             <div className="absolute inset-0 bg-black/5 opacity-0 hover:opacity-100 transition-opacity" />
@@ -189,7 +189,7 @@ export function Header() {
                                     initial={{ opacity: 0, y: 15, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                                    className="absolute top-16 right-0 w-64 bg-[#080a0f] border border-white/10 rounded-[2rem] shadow-[0_50px_100px_rgba(0,0,0,0.8)] p-3 z-50 backdrop-blur-3xl text-white"
+                                    className="absolute top-16 right-0 w-64 bg-[var(--background)] border border-[var(--glass-border)] rounded-[2rem] shadow-2xl p-3 z-50 backdrop-blur-3xl text-[var(--foreground)]"
                                 >
                                     <div className="p-5 border-b border-white/5 mb-2 flex items-center gap-4">
                                         <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-[#00E5FF]">

@@ -19,6 +19,8 @@ export default function Home() {
   const [dailySchedule, setDailySchedule] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanComplete, setScanComplete] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -57,8 +59,22 @@ export default function Home() {
       await dailyScheduleApi.delete(id);
       fetchData();
     } catch (error) {
-      console.error("Failed to delete task:", error);
+      console.error("Failed to add task:", error);
     }
+  };
+
+  const handleScan = () => {
+    if (isScanning) return;
+    setIsScanning(true);
+    setScanComplete(false);
+
+    // Simulate biometric analysis
+    setTimeout(() => {
+      setIsScanning(false);
+      setScanComplete(true);
+      // Reset complete state after 2s
+      setTimeout(() => setScanComplete(false), 2000);
+    }, 3000);
   };
 
   useEffect(() => {
@@ -99,48 +115,44 @@ export default function Home() {
 
   return (
     <DashboardLayout>
-      {/* Dynamic Background - More Vibrant */}
+      {/* Soft medical background blobs */}
       <div className="aurora-bg">
-        <div className="aurora-orb w-[800px] h-[800px] bg-[var(--primary)] top-[-300px] left-[-200px] opacity-[0.05]" />
-        <div className="aurora-orb w-[600px] h-[600px] bg-[#8b5cf6] bottom-[-200px] right-[-100px] opacity-[0.04]" />
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none" />
+        <div className="aurora-orb w-[700px] h-[700px] bg-[var(--primary-light)] top-[-200px] left-[-150px] opacity-60" />
+        <div className="aurora-orb w-[500px] h-[500px] bg-[var(--secondary-light)] bottom-[-150px] right-[-100px] opacity-50" />
       </div>
 
       <div className="max-w-[1800px] mx-auto space-y-12 px-6 sm:px-12 pb-20">
 
-        {/* Header Greeting Section - Enhanced Glass */}
-        <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-12 pt-8 relative z-10">
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-white/5 text-[#00E5FF] rounded-2xl border border-[#00E5FF]/30 shadow-[0_0_20px_rgba(0,229,255,0.1)] backdrop-blur-xl">
-                <Sparkles size={20} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-[#00E5FF]">Neural Core V2.0</span>
-                <span className="text-[8px] font-bold uppercase tracking-widest text-[var(--secondary)]">System Optimization: Stable</span>
-              </div>
+        {/* Header Greeting */}
+        <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-8 pt-8 relative z-10">
+          <div className="space-y-3">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--primary-light)] rounded-full [box-shadow:var(--clay-shadow-sm)]">
+              <Sparkles size={14} className="text-[var(--primary)]" />
+              <span className="text-[11px] font-bold text-[var(--primary-dark)] tracking-wide">Synapse Care OS · Active</span>
             </div>
-            <h1 className="text-8xl font-black tracking-tighter uppercase leading-[0.8] text-[var(--foreground)]">
-              Welcome, <br /><span className="text-gradient">{(user?.firstName || 'TEJAS').toUpperCase()}</span>
+            <h1 className="text-6xl font-black tracking-tight leading-tight text-[var(--foreground)]">
+              Good morning, <br /><span className="text-gradient">{user?.firstName || 'Doctor'}</span>
             </h1>
-            <p className="text-[var(--secondary)] font-bold max-w-2xl text-2xl leading-relaxed">
-              System analysis indicates a <span className="text-[#00E5FF]">{medications.length > 0 ? '98.4%' : '100%'} stability score</span>. Protocols are performing within optimal parameters.
+            <p className="text-[var(--foreground-muted)] font-medium max-w-xl text-lg leading-relaxed">
+              {medications.length > 0 ? `You have ${medications.length} active medication${medications.length > 1 ? 's' : ''} today.` : 'All medication protocols are clear for today.'} Your vitals are within normal parameters.
             </p>
           </div>
 
-          <div className="flex items-center gap-8 p-8 bg-white/5 rounded-[3rem] border border-white/10 backdrop-blur-3xl shadow-2xl">
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--secondary)]">Node</span>
-              <div className="w-3 h-3 rounded-full bg-[#00E5FF] shadow-[0_0_20px_#00E5FF]" />
+          {/* Health Status Card */}
+          <div className="flex items-center gap-5 p-5 bg-white rounded-[1.75rem] border border-[var(--clay-border)] [box-shadow:var(--clay-shadow-md)]">
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-[9px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">Status</span>
+              <div className="w-3 h-3 rounded-full bg-[var(--success)] shadow-[0_0_12px_rgba(16,185,129,0.6)]" />
             </div>
-            <div className="h-10 w-[1px] bg-white/10" />
-            <div className="space-y-1">
-              <div className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--secondary)]">Security State</div>
-              <div className="text-sm font-black uppercase text-[var(--foreground)]">Registry Secure</div>
+            <div className="w-[1px] h-10 bg-[var(--clay-border)]" />
+            <div className="space-y-0.5">
+              <div className="text-[9px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">Health Score</div>
+              <div className="text-lg font-black text-[var(--primary-dark)]">98.4%</div>
             </div>
-            <div className="h-10 w-[1px] bg-white/10" />
-            <div className="p-4 bg-white/5 text-[var(--foreground)] rounded-2xl border border-white/5 shadow-xl">
-              <ShieldAlert size={20} className="text-red-500" />
+            <div className="w-[1px] h-10 bg-[var(--clay-border)]" />
+            <div className="space-y-0.5">
+              <div className="text-[9px] font-bold uppercase tracking-widest text-[var(--foreground-muted)]">Medications</div>
+              <div className="text-lg font-black text-[var(--secondary)]">{medications.length} Active</div>
             </div>
           </div>
         </div>
@@ -160,34 +172,38 @@ export default function Home() {
             <div className="flex-1">
               <HealthPulseOrb />
             </div>
-            {/* Proper Biometric Button */}
+            {/* Biometric Scan — Interactive */}
             <motion.button
-              whileHover={{ scale: 1.02, y: -5 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full !p-8 bg-white/5 border border-[#00E5FF]/30 rounded-[3rem] group overflow-hidden shadow-2xl relative backdrop-blur-3xl text-left"
+              onClick={handleScan}
+              whileHover={{ y: -4, scale: 1.01 }}
+              whileTap={{ scale: 0.98, y: 0 }}
+              disabled={isScanning}
+              className={`w-full p-6 bg-white rounded-[2rem] border border-[var(--clay-border)] text-left relative overflow-hidden [box-shadow:var(--clay-shadow-md)] hover:[box-shadow:var(--clay-shadow-lg)] transition-all duration-300 ${isScanning ? 'cursor-wait' : ''}`}
             >
-              <div className="absolute right-[-20px] bottom-[-20px] p-4 opacity-5 group-hover:opacity-20 transition-all duration-700">
-                <Fingerprint size={120} className="text-[#00E5FF]" />
+              <div className="absolute right-4 bottom-4 opacity-[0.07]">
+                <Fingerprint size={100} className={`text-[var(--primary)] ${isScanning ? 'animate-pulse' : ''}`} />
               </div>
-
-              {/* Scan Beam Effect */}
-              <div className="absolute inset-x-0 h-[2px] bg-[#00E5FF]/30 top-0 group-hover:top-full transition-all duration-[2000ms] ease-linear pointer-events-none" />
-
-              <div className="relative z-10 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="text-[10px] font-black uppercase tracking-[0.4em] text-[#00E5FF]">System Protocol</div>
-                  <Zap size={16} className="text-[#00E5FF] animate-pulse" />
+              <div className="relative z-10 space-y-3">
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${isScanning ? 'bg-amber-100 text-amber-700' : scanComplete ? 'bg-green-100 text-green-700' : 'bg-[var(--secondary-light)]'}`}>
+                  {isScanning ? <Loader2 size={10} className="animate-spin" /> : scanComplete ? <ShieldAlert size={10} className="text-green-600" /> : <Zap size={10} className="text-[var(--secondary)]" />}
+                  <span className={`text-[9px] font-bold uppercase tracking-widest ${isScanning ? 'text-amber-700' : scanComplete ? 'text-green-700' : 'text-[var(--secondary-dark)]'}`}>
+                    {isScanning ? 'Analyzing...' : scanComplete ? 'Scan Complete' : 'Biometric Auth'}
+                  </span>
                 </div>
-                <h3 className="text-3xl font-black uppercase tracking-tighter leading-none text-[var(--foreground)]">Run Full <br />Biometric Scan</h3>
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden">
+                <h3 className="text-2xl font-black tracking-tight leading-tight text-[var(--foreground)]">
+                  {isScanning ? 'Scanning Vitals' : scanComplete ? 'Vitals Normal' : 'Run Biometric\nHealth Scan'}
+                </h3>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 h-2 bg-[var(--muted)] rounded-full overflow-hidden [box-shadow:inset_0_1px_3px_rgba(0,0,0,0.08)]">
                     <motion.div
-                      className="h-full bg-[#00E5FF]"
-                      animate={{ width: ['0%', '100%'] }}
-                      transition={{ duration: 3, repeat: Infinity }}
+                      className="h-full bg-[var(--primary)] rounded-full"
+                      animate={{ width: isScanning ? ['0%', '100%'] : scanComplete ? '100%' : '0%' }}
+                      transition={isScanning ? { duration: 2, repeat: Infinity } : { duration: 0.5 }}
                     />
                   </div>
-                  <span className="text-[10px] font-black text-[#00E5FF]">ACTIVE</span>
+                  <span className="text-[10px] font-bold text-[var(--primary)]">
+                    {isScanning ? 'SCANNING...' : scanComplete ? 'DONE' : 'READY'}
+                  </span>
                 </div>
               </div>
             </motion.button>

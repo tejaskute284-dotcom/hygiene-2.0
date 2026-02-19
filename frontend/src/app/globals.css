@@ -7,118 +7,149 @@
   --color-secondary: var(--secondary);
   --color-accent: var(--accent);
   --color-muted: var(--muted);
-  --color-glass-border: var(--glass-border);
-  --color-glass-bg: var(--glass-bg);
+  --color-surface: var(--surface);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+/* Wire Tailwind dark: variant to our [data-theme="dark"] attribute */
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ============================================================
+   ROOT — Medical Light Theme (Claymorphism)
+   Primary: Soft Green | Secondary: Sky Blue | Emergency: Red only
+   ============================================================ */
 :root {
-  /* Default / Day - Light Mode */
-  --background: #fdfcfb;
-  --foreground: #0f172a;
-  --primary: #4f46e5;
-  --secondary: #64748b;
-  --accent: #06b6d4;
-  --muted: #f1f5f9;
-  --glass-bg: rgba(255, 255, 255, 0.4);
-  --glass-border: rgba(255, 255, 255, 0.8);
-  --simple-contrast-bg: #ffffff;
-  --simple-contrast-text: #000000;
+  --background: #eef7f2;
+  --surface: #ffffff;
+  --foreground: #1a3c2e;
+  --foreground-muted: #4a7060;
+  --primary: #22c55e;
+  --primary-light: #bbf7d0;
+  --primary-dark: #16a34a;
+  --secondary: #0ea5e9;
+  --secondary-light: #bae6fd;
+  --secondary-dark: #0284c7;
+  --accent: #a78bfa;
+  --accent-light: #ede9fe;
+  --muted: #d1f0e0;
+  --emergency: #ef4444;
+  --emergency-light: #fee2e2;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --success: #10b981;
+
+  /* Claymorphism tokens */
+  --clay-bg: #ffffff;
+  --clay-shadow-sm: 0 2px 8px rgba(34, 197, 94, 0.10), inset 0 1px 3px rgba(255, 255, 255, 0.90);
+  --clay-shadow-md: 0 6px 20px rgba(34, 197, 94, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06), inset 0 2px 4px rgba(255, 255, 255, 0.80);
+  --clay-shadow-lg: 0 12px 40px rgba(34, 197, 94, 0.15), 0 4px 16px rgba(0, 0, 0, 0.08), inset 0 2px 6px rgba(255, 255, 255, 0.90);
+  --clay-shadow-active: 0 2px 6px rgba(34, 197, 94, 0.08), inset 0 2px 6px rgba(0, 0, 0, 0.08);
+  --clay-border: rgba(34, 197, 94, 0.15);
+  --clay-radius: 1.75rem;
+  --clay-radius-sm: 1rem;
+  --clay-radius-lg: 2.5rem;
 }
 
-/* Dark Mode - Balanced Slate (Reduced darkness, Improved Contrast) */
+/* ============================================================
+   DARK MODE — Medical Dark (Teal/Forest night)
+   ============================================================ */
 [data-theme="dark"] {
-  --background: #0f1219;
-  --foreground: #ffffff;
-  --primary: #00e5ff;
-  --secondary: #cbd5e1;
-  --accent: #8b5cf6;
-  --muted: #1e293b;
-  --glass-bg: rgba(15, 20, 30, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.15);
+  --background: #0d1f18;
+  --surface: #162a20;
+  --foreground: #e6f4ed;
+  --foreground-muted: #86b09a;
+  --primary: #4ade80;
+  --primary-light: #14532d;
+  --primary-dark: #86efac;
+  --secondary: #38bdf8;
+  --secondary-light: #0c4a6e;
+  --secondary-dark: #7dd3fc;
+  --accent: #c4b5fd;
+  --accent-light: #3b1e6e;
+  --muted: #1a3228;
+  --emergency: #f87171;
+  --emergency-light: #4c1414;
+  --warning: #fbbf24;
+  --warning-light: #451a03;
+  --success: #34d399;
+
+  /* Dark clay shadows — perceptible on deep backgrounds */
+  --clay-bg: #162a20;
+  --clay-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.40), inset 0 1px 2px rgba(255, 255, 255, 0.04);
+  --clay-shadow-md: 0 6px 24px rgba(0, 0, 0, 0.50), 0 2px 10px rgba(0, 0, 0, 0.30), inset 0 1px 3px rgba(255, 255, 255, 0.05);
+  --clay-shadow-lg: 0 12px 44px rgba(0, 0, 0, 0.55), 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 1px 3px rgba(255, 255, 255, 0.06);
+  --clay-shadow-active: 0 2px 6px rgba(0, 0, 0, 0.30), inset 0 2px 8px rgba(0, 0, 0, 0.40);
+  --clay-border: rgba(74, 222, 128, 0.12);
 }
 
-/* Morning - Light Mode */
-[data-time="morning"][data-theme="light"],
-[data-time="morning"]:not([data-theme="dark"]) {
-  --background: #fff7ed;
-  --foreground: #431407;
-  --primary: #f97316;
-  --secondary: #fb923c;
-  --accent: #38bdf8;
-  --muted: #ffedd5;
-  --glass-bg: rgba(255, 247, 237, 0.7);
-  --glass-border: rgba(251, 146, 60, 0.3);
+/* ============================================================
+   BODY
+   ============================================================ */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background 0.6s ease, color 0.4s ease;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Morning - Dark Mode (Warm Slate) */
-[data-time="morning"][data-theme="dark"] {
-  --background: #1e1b18;
-  --foreground: #fffbeb;
-  --primary: #fb923c;
-  --secondary: #94a3b8;
-  --accent: #7dd3fc;
-  --muted: #2d2a27;
-  --glass-bg: rgba(30, 27, 24, 0.6);
-  --glass-border: rgba(251, 146, 60, 0.2);
+/* ============================================================
+   CLAYMORPHISM CORE CLASSES
+   ============================================================ */
+.clay {
+  background: var(--clay-bg);
+  box-shadow: var(--clay-shadow-md);
+  border-radius: var(--clay-radius);
+  border: 1px solid var(--clay-border);
 }
 
-/* Evening - Light Mode */
-[data-time="evening"][data-theme="light"],
-[data-time="evening"]:not([data-theme="dark"]) {
-  --background: #faf5ff;
-  --foreground: #3b0764;
-  --primary: #a855f7;
-  --secondary: #c084fc;
-  --accent: #f472b6;
-  --muted: #f3e8ff;
-  --glass-bg: rgba(250, 245, 255, 0.7);
-  --glass-border: rgba(168, 85, 247, 0.3);
+.clay-sm {
+  background: var(--clay-bg);
+  box-shadow: var(--clay-shadow-sm);
+  border-radius: var(--clay-radius-sm);
+  border: 1px solid var(--clay-border);
 }
 
-/* Evening - Dark Mode (Twilight Slate) */
-[data-time="evening"][data-theme="dark"] {
-  --background: #171731;
-  --foreground: #f5f3ff;
-  --primary: #c084fc;
-  --secondary: #94a3b8;
-  --accent: #f9a8d4;
-  --muted: #1e1e46;
-  --glass-bg: rgba(23, 23, 49, 0.6);
-  --glass-border: rgba(192, 132, 252, 0.2);
+.clay-lg {
+  background: var(--clay-bg);
+  box-shadow: var(--clay-shadow-lg);
+  border-radius: var(--clay-radius-lg);
+  border: 1px solid var(--clay-border);
 }
 
-/* Night - Balanced Deep Slate (Improved Contrast) */
-[data-time="night"][data-theme="dark"],
-[data-time="night"]:not([data-theme="light"]) {
-  --background: #0a0c16;
-  --foreground: #ffffff;
-  --primary: #6366f1;
-  --secondary: #cbd5e1;
-  --accent: #818cf8;
-  --muted: #1a1c2e;
-  --glass-bg: rgba(10, 12, 22, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.15);
+/* Button press effect */
+.clay-btn {
+  box-shadow: var(--clay-shadow-md);
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
-/* --- Accessibility Mode Overrides --- */
-
-/* SIMPLE MODE: High Contrast, Huge Elements, Voice-First emphasis */
-[data-mode="simple"] {
-  font-size: 110%;
-  --background: #ffffff !important;
-  --foreground: #000000 !important;
-  --primary: #000000 !important;
-  --secondary: #444444 !important;
-  --accent: #0000ff !important;
-  --muted: #f0f0f0 !important;
-  --glass-bg: #ffffff !important;
-  --glass-border: #000000 !important;
+.clay-btn:hover {
+  box-shadow: var(--clay-shadow-lg);
+  transform: translateY(-2px);
 }
 
-/* Custom Scrollbar */
+.clay-btn:active {
+  box-shadow: var(--clay-shadow-active);
+  transform: translateY(1px);
+}
+
+/* ============================================================
+   TEXT GRADIENT — Green to Sky Blue (medical)
+   ============================================================ */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -129,7 +160,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-glass-border);
+  background: var(--primary-light);
   border-radius: 10px;
 }
 
@@ -137,78 +168,51 @@
   background: var(--primary);
 }
 
-/* Global Selection */
 ::selection {
-  background: var(--primary);
-  color: white;
+  background: var(--primary-light);
+  color: var(--primary-dark);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s ease;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Noise Texture Overlay */
-.noise-bg::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  opacity: 0.02;
-  mix-blend-mode: overlay;
-}
-
-/* Custom transitions and animations */
-.glass-transition {
-  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
+/* ============================================================
+   BACKGROUND SOFT BLOBS (replaces dark aurora)
+   ============================================================ */
 .aurora-bg {
   position: fixed;
   inset: 0;
   z-index: -1;
   overflow: hidden;
-  filter: blur(140px);
   pointer-events: none;
-  opacity: 0.4;
 }
 
 .aurora-orb {
   position: absolute;
   border-radius: 50%;
-  animation: float 25s infinite alternate cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  filter: blur(80px);
+  animation: float 20s infinite alternate ease-in-out;
 }
 
 @keyframes float {
   0% {
-    transform: translate(-10%, -10%) scale(1) rotate(0deg);
+    transform: translate(-5%, -5%) scale(1);
   }
 
   50% {
-    transform: translate(15%, 5%) scale(1.2) rotate(180deg);
+    transform: translate(8%, 3%) scale(1.15);
   }
 
   100% {
-    transform: translate(-5%, 15%) scale(1.1) rotate(360deg);
+    transform: translate(-3%, 10%) scale(1.05);
   }
 }
 
-/* Text Masking Gradient */
-.text-gradient {
-  background: linear-gradient(to right, var(--primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.glass-transition {
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* High-end Scanning Effect */
+/* Soft scan line (very subtle for medical) */
 @keyframes scan {
   from {
     top: -100%;
@@ -223,23 +227,8 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  height: 100px;
-  background: linear-gradient(to bottom, transparent, var(--primary), transparent);
-  opacity: 0.05;
-  animation: scan 8s linear infinite;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(34, 197, 94, 0.04), transparent);
+  animation: scan 10s linear infinite;
   pointer-events: none;
-}
-
-/* Perspective Cards */
-.perspective-card {
-  perspective: 1000px;
-}
-
-.perspective-content {
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.perspective-card:hover .perspective-content {
-  transform: rotateX(5deg) rotateY(-5deg);
 }

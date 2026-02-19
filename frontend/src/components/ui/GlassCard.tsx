@@ -1,68 +1,82 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { HTMLMotionProps, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { useState } from "react";
+import { HTMLMotionProps, motion } from "framer-motion";
 
 interface GlassCardProps extends HTMLMotionProps<"div"> {
     children: React.ReactNode;
     className?: string;
     interactive?: boolean;
+    variant?: "default" | "elevated" | "flat";
 }
 
-export function GlassCard({ children, className, interactive = true, ...props }: GlassCardProps) {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
+export function GlassCard({
+    children,
+    className,
+    interactive = true,
+    variant = "default",
+    ...props
+}: GlassCardProps) {
 
-    const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), { stiffness: 150, damping: 20 });
-    const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), { stiffness: 150, damping: 20 });
+    const variants = {
+        // Standard clay card — white in light, dark green surface in dark
+        default: cn(
+            "rounded-[2rem] overflow-hidden p-8",
+            "bg-[var(--surface)]",
+            "[box-shadow:var(--clay-shadow-md)]",
+            "border border-[var(--clay-border)]",
+        ),
 
-    function onMouseMove(event: React.MouseEvent<HTMLDivElement>) {
-        if (!interactive) return;
-        const rect = event.currentTarget.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width - 0.5;
-        const y = (event.clientY - rect.top) / rect.height - 0.5;
-        mouseX.set(x);
-        mouseY.set(y);
-    }
+        // More pronounced elevation
+        elevated: cn(
+            "rounded-[2.5rem] overflow-hidden p-8",
+            "bg-[var(--surface)]",
+            "[box-shadow:var(--clay-shadow-lg)]",
+            "border border-[var(--clay-border)]",
+        ),
 
-    function onMouseLeave() {
-        mouseX.set(0);
-        mouseY.set(0);
-    }
+        // Flat / inset — for nested content, no padding override
+        flat: cn(
+            "rounded-[1.25rem] overflow-hidden",
+            "bg-[var(--muted)]",
+            "[box-shadow:inset_0_2px_6px_rgba(0,0,0,0.06),inset_0_1px_2px_rgba(255,255,255,0.60)]",
+            "border border-[var(--clay-border)]",
+        ),
+    };
 
     return (
         <motion.div
             className={cn(
-                "group relative rounded-[2.5rem] p-8 backdrop-blur-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-[var(--color-glass-border)] bg-[var(--color-glass-bg)] overflow-hidden glass-transition",
-                interactive && "perspective-card",
+                "relative glass-transition",
+                variants[variant],
+                interactive && [
+                    "hover:-translate-y-1",
+                    // Hover shadow — slightly stronger version of the variant shadow
+                    variant === "flat"
+                        ? ""
+                        : "[&:hover]:[box-shadow:var(--clay-shadow-lg)]",
+                ],
                 className
             )}
-            onMouseMove={onMouseMove}
-            onMouseLeave={onMouseLeave}
-            style={interactive ? { rotateX, rotateY, transformStyle: "preserve-3d" } : {}}
+            transition={{ duration: 0.2 }}
             {...props}
         >
-            {/* Top Shine */}
-            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent z-20" />
-
-            {/* Subtle Grid Pattern Overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none z-0"
-                style={{
-                    backgroundImage: `radial-gradient(var(--foreground) 0.5px, transparent 0.5px)`,
-                    backgroundSize: '24px 24px'
-                }}
+            {/*
+                Top edge highlight — the claymorphism "puffy" shine.
+                Visible in light mode (white line on white card = subtle).
+                In dark mode we use a slightly brighter rgba so it's still perceptible.
+            */}
+            <div
+                className="absolute top-0 left-0 right-0 h-[1px] z-10 pointer-events-none"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent)" }}
             />
 
-            {/* Dynamic Spotlight Effect */}
-            <motion.div
-                className="absolute inset-0 z-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000"
+            {/* Very subtle dot-grid texture for depth */}
+            <div
+                className="absolute inset-0 pointer-events-none z-0 opacity-[0.03]"
                 style={{
-                    background: useTransform(
-                        [mouseX, mouseY],
-                        ([x, y]) => `radial-gradient(600px circle at ${(x as number + 0.5) * 100}% ${(y as number + 0.5) * 100}%, var(--primary), transparent)`
-                    ),
-                    opacity: 0.05
+                    backgroundImage: "radial-gradient(var(--foreground) 0.5px, transparent 0.5px)",
+                    backgroundSize: "22px 22px",
                 }}
             />
 
