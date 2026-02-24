@@ -43,6 +43,15 @@ export class UsersService {
         }
 
         // Update specific settings
+        if (settings.firstName !== undefined) {
+            user.firstName = settings.firstName;
+        }
+        if (settings.lastName !== undefined) {
+            user.lastName = settings.lastName;
+        }
+        if (settings.phone !== undefined) {
+            user.phone = settings.phone;
+        }
         if (settings.languagePreference !== undefined) {
             user.languagePreference = settings.languagePreference;
         }

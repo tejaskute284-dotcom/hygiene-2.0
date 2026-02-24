@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Request, UseGuards, HttpException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -10,7 +10,28 @@ export class AuthController {
     @Public()
     @Post('register')
     async register(@Body() registerDto: any) {
-        return this.authService.register(registerDto);
+        try {
+            return await this.authService.register(registerDto);
+        } catch (error: any) {
+            console.error(`[AUTH-CONTROLLER-v3] Registration error caught:`, error);
+            const status = error instanceof HttpException ? error.getStatus() : (error.status || HttpStatus.INTERNAL_SERVER_ERROR);
+
+            let errorMessage = 'Registration failed';
+            if (error.response && error.response.message) {
+                errorMessage = Array.isArray(error.response.message) ? error.response.message[0] : error.response.message;
+            } else if (error.message) {
+                errorMessage = error.message;
+            }
+
+            const responseBody = {
+                message: errorMessage,
+                error: (error as any).name || (error instanceof HttpException ? error.constructor.name : 'InternalServerError'),
+                statusCode: status,
+                timestamp: new Date().toISOString()
+            };
+            console.log(`[AUTH-CONTROLLER-v3] Explicitly returning error body:`, responseBody);
+            throw new HttpException(responseBody, status);
+        }
     }
 
     @Public()

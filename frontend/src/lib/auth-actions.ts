@@ -51,7 +51,12 @@ export const register = async (userData: {
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
+        let errorData: any;
+        try {
+            errorData = await response.json();
+        } catch (e) {
+            errorData = { message: 'Registration failed' };
+        }
         throw new Error(errorData.message || 'Registration failed');
     }
 

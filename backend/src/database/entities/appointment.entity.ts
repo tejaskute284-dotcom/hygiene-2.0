@@ -16,7 +16,7 @@ export class Appointment {
     @Column({ type: 'text' })
     type: string;
 
-    @Column({ type: 'simple-json' })
+    @Column({ type: 'simple-json', nullable: true })
     provider: {
         name: string;
         specialty: string;
@@ -30,10 +30,10 @@ export class Appointment {
         npi?: string;
     };
 
-    @Column({ name: 'scheduled_at' })
+    @Column({ name: 'scheduled_at', nullable: true })
     scheduledAt: Date;
 
-    @Column({ type: 'int' })
+    @Column({ type: 'int', nullable: true })
     duration: number;
 
     @Column({ type: 'text', default: 'scheduled' })

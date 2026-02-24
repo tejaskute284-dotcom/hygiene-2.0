@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,9 +19,10 @@ export class AuthService {
     async register(registerDto: any) {
         const { email, password, firstName, lastName, dateOfBirth } = registerDto;
 
-        const existingUser = await this.userRepository.findOne({ where: { email } });
+        const existingUser = await this.userRepository.findOne({ where: { email: email.toLowerCase() } });
         if (existingUser) {
-            throw new UnauthorizedException('Email already registered');
+            console.warn(`[AUTH-SERVICE] Registration failed: Email ${email} already exists`);
+            throw new ConflictException('Email already registered');
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -92,19 +93,22 @@ export class AuthService {
             roles: user.roles
         };
 
+        const userResult = {
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            roles: user.roles,
+        };
+
         return {
             accessToken: this.jwtService.sign(payload),
             refreshToken: this.jwtService.sign(payload, {
                 secret: process.env.JWT_REFRESH_SECRET || 'refresh_secret',
                 expiresIn: (process.env.JWT_REFRESH_EXPIRATION || '7d') as any,
             }),
-            user: {
-                id: user.id,
-                email: user.email,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                roles: user.roles,
-            },
+            ...userResult,
+            user: userResult
         };
     }
 

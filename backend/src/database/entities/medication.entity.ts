@@ -22,7 +22,7 @@ export class Medication {
     @Column({ nullable: true })
     ndc: string;
 
-    @Column({ type: 'simple-json' })
+    @Column({ type: 'simple-json', nullable: true })
     dosage: {
         amount: number;
         unit: string;
@@ -37,7 +37,7 @@ export class Medication {
         imageUrl?: string;
     };
 
-    @Column({ type: 'simple-json' })
+    @Column({ type: 'simple-json', nullable: true })
     schedule: {
         frequency: string;
         times: string[];

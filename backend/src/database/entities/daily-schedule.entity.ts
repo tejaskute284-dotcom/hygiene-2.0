@@ -19,7 +19,11 @@ export class DailySchedule {
     @Column({ type: 'text', nullable: true })
     description: string;
 
-    @Column()
+    @Column({ type: 'text', nullable: true })
+    notes: string;
+
+    @Column({ name: 'scheduled_at', nullable: true })
+    scheduledAt: Date;
     time: string;
 
     @Column({ type: 'boolean', default: false, name: 'is_completed' })
