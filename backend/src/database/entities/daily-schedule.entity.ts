@@ -24,6 +24,8 @@ export class DailySchedule {
 
     @Column({ name: 'scheduled_at', nullable: true })
     scheduledAt: Date;
+
+    @Column({ type: 'text', nullable: true })
     time: string;
 
     @Column({ type: 'boolean', default: false, name: 'is_completed' })
